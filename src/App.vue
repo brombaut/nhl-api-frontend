@@ -8,6 +8,22 @@
   </div>
 </template>
 
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+// import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
+// import { Team } from "@/types/team";
+
+@Component
+export default class App extends Vue {
+  mounted() {
+    // teamsApi.getTeams().then((response: Array<Team>) => {
+    //   console.log(response);
+    // });
+  }
+}
+</script>
+
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
