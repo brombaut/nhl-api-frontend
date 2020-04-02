@@ -3,7 +3,7 @@ import { Api } from "./api";
 import { NhlApiResponsePeople } from "@/types/nhl-api-types/nhl-api-response-people";
 import { Player } from "@/types/store-types/player";
 
-const API_TEAMS = "https://statsapi.web.nhl.com/api/v1/people";
+const API_PEOPLE = "https://statsapi.web.nhl.com/api/v1/people";
 
 class PlayersApi extends Api {
   public constructor(config?: AxiosRequestConfig) {
@@ -12,7 +12,7 @@ class PlayersApi extends Api {
   }
 
   public getPlayerById(playerId: number): Promise<Player> {
-    return this.get<NhlApiResponsePeople>(`${API_TEAMS}/${playerId}`)
+    return this.get<NhlApiResponsePeople>(`${API_PEOPLE}/${playerId}`)
       .then((teamsApiResponse: AxiosResponse<NhlApiResponsePeople>) => {
         const { people: nhlApiPeople } = teamsApiResponse.data;
         const player: Player = new Player(nhlApiPeople[0]);
