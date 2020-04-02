@@ -12,7 +12,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 // import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
-// import { Team } from "@/types/team";
+// import { Team } from './types/store-types/team';
 
 @Component
 export default class App extends Vue {
