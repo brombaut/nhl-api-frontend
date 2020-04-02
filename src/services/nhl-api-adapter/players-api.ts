@@ -1,23 +1,20 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Api } from "./api";
 import { NhlApiResponsePeople } from "@/types/nhl-api-types/nhl-api-response-people";
-import { Player } from '@/types/store-types/player';
+import { Player } from "@/types/store-types/player";
 
 const API_TEAMS = "https://statsapi.web.nhl.com/api/v1/people";
 
-class PlayerApi extends Api {
+class PlayersApi extends Api {
   public constructor(config?: AxiosRequestConfig) {
     super(config);
     this.getPlayerById = this.getPlayerById.bind(this);
   }
 
-  public getPlayerById(playerId: number): Promise<Player | null> {
+  public getPlayerById(playerId: number): Promise<Player> {
     return this.get<NhlApiResponsePeople>(`${API_TEAMS}/${playerId}`)
       .then((teamsApiResponse: AxiosResponse<NhlApiResponsePeople>) => {
         const { people: nhlApiPeople } = teamsApiResponse.data;
-        if (nhlApiPeople.length !== 1) {
-          return null;
-        }
         const player: Player = new Player(nhlApiPeople[0]);
         return player;
       })
@@ -27,4 +24,4 @@ class PlayerApi extends Api {
   }
 }
 
-export const playerApi = new PlayerApi();
+export const playersApi = new PlayersApi();

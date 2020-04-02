@@ -1,4 +1,4 @@
-import { NhlApiPerson } from '../nhl-api-types/nhl-api-person';
+import { NhlApiPerson } from "../nhl-api-types/nhl-api-person";
 
 export class Player {
   id: number;
