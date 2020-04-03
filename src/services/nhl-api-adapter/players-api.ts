@@ -13,8 +13,8 @@ class PlayersApi extends Api {
 
   public getPlayerById(playerId: number): Promise<Player> {
     return this.get<NhlApiResponsePeople>(`${API_PEOPLE}/${playerId}`)
-      .then((teamsApiResponse: AxiosResponse<NhlApiResponsePeople>) => {
-        const { people: nhlApiPeople } = teamsApiResponse.data;
+      .then((peopleApiResponse: AxiosResponse<NhlApiResponsePeople>) => {
+        const { people: nhlApiPeople } = peopleApiResponse.data;
         const player: Player = new Player(nhlApiPeople[0]);
         return player;
       })

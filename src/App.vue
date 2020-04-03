@@ -11,6 +11,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+// import { standingsApi } from './services/nhl-api-adapter/standings-api';
 // import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 // import { Roster } from './types/store-types/roster';
 // import { Team } from './types/store-types/team';
@@ -27,6 +28,9 @@ export default class App extends Vue {
     //   console.log(response);
     // });
     // teamsApi.getTeamRoster(1).then((response: Roster) => {
+    //   console.log(response);
+    // });
+    // standingsApi.getRegularSeasonStandings().then((response: any) => {
     //   console.log(response);
     // });
   }
