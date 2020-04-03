@@ -26,5 +26,5 @@ export interface NhlApiPerson {
     name: string;
     type: string;
     abbreviation: string;
-  }
+  };
 }

@@ -1,3 +1,3 @@
-export interface NhlApiResponseStangingsTypes {
-  standingTypes: JSON;
-}
+import { NhlApiStandingsType } from './nhl-api-standings-type';
+
+export type NhlApiResponseStandingsTypes = Array<NhlApiStandingsType>;
