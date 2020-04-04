@@ -12,10 +12,14 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { TeamsModule } from "./store/modules/teams";
+import { DivisionsModule } from "./store/modules/divisions";
+import { ConferencesModule } from "./store/modules/conferences";
 
 @Component
 export default class App extends Vue {
   public loadInitialData(): void {
+    ConferencesModule.loadConferences();
+    DivisionsModule.loadDivisions();
     TeamsModule.loadTeams();
   }
 
