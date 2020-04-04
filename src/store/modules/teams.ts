@@ -9,12 +9,12 @@ import store from "@/store";
 import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { Team } from "@/types/store-types/team";
 
-interface TeamsState {
+export interface TeamsState {
   teams: Array<Team>;
   selectedTeamId: number;
 }
 
-@Module({ store, name: "teams" })
+@Module({ dynamic: true, store, name: "teams" })
 class Teams extends VuexModule implements TeamsState {
   private _teams: Array<Team> = [];
   private _selectedTeamId = 0;
@@ -45,7 +45,6 @@ class Teams extends VuexModule implements TeamsState {
 
   @Action
   public async loadTeams() {
-    console.log("loadTeams");
     const teams = await teamsApi.getTeams();
     this.setTeams(teams);
   }
@@ -56,5 +55,4 @@ class Teams extends VuexModule implements TeamsState {
   }
 }
 
-export default Teams;
-// export const TeamsModule = getModule(Teams);
+export const TeamsModule = getModule(Teams);

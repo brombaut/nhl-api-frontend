@@ -15,7 +15,6 @@ class TeamsApi extends Api {
   }
 
   public getTeams(): Promise<Array<Team>> {
-    console.log("getTeams");
     return this.get<NhlApiResponseTeams>(API_TEAMS)
       .then((teamsApiResponse: AxiosResponse<NhlApiResponseTeams>) => {
         const { teams: nhlApiTeams } = teamsApiResponse.data;
@@ -23,7 +22,6 @@ class TeamsApi extends Api {
         nhlApiTeams.forEach((nhlApiTeam: NhlApiTeam) => {
           teams.push(new Team(nhlApiTeam));
         });
-        console.log(teams);
         return teams;
       })
       .catch((error: AxiosError) => {

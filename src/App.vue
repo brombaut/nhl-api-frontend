@@ -11,8 +11,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { getModule } from "vuex-module-decorators";
-import Teams from "./store/modules/teams";
+// import { TeamsModule } from './store/modules/teams';
 
 @Component
 export default class App extends Vue {
@@ -32,9 +31,11 @@ export default class App extends Vue {
     // TeamsModule.loadTeams();
     // const teamsModule = getModule(Teams);
     // console.log(getModule);
-    const teamsModule = getModule(Teams);
-    console.log(teamsModule);
-    teamsModule.loadTeams();
+    // const teamsModule = getModule(Teams);
+    // console.log(teamsModule);
+    // teamsModule.loadTeams();
+    // console.log(this.$store);
+    // TeamsModule.loadTeams();
   }
 }
 </script>
