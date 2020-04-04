@@ -11,33 +11,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-// import { TeamsModule } from './store/modules/teams';
 
 @Component
-export default class App extends Vue {
-  mounted() {
-    // teamsApi.getTeams().then((response: Array<Team>) => {
-    //   console.log(response);
-    // });
-    // playersApi.getPlayerById(8471233).then((response: Player) => {
-    //   console.log(response);
-    // });
-    // teamsApi.getTeamRoster(1).then((response: Roster) => {
-    //   console.log(response);
-    // });
-    // standingsApi.getRegularSeasonStandings().then((response: any) => {
-    //   console.log(response);
-    // });
-    // TeamsModule.loadTeams();
-    // const teamsModule = getModule(Teams);
-    // console.log(getModule);
-    // const teamsModule = getModule(Teams);
-    // console.log(teamsModule);
-    // teamsModule.loadTeams();
-    // console.log(this.$store);
-    // TeamsModule.loadTeams();
-  }
-}
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">
