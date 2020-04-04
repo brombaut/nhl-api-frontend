@@ -9,6 +9,8 @@ import store from "@/store";
 import { Roster } from "@/types/store-types/roster";
 import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { TeamsModule } from "./teams";
+import { RosterRelation } from "@/types/store-types/roster-relation";
+import { PlayersModule } from "./players";
 
 export interface RostersState {
   rosters: Array<Roster>;
@@ -39,6 +41,9 @@ class Rosters extends VuexModule implements RostersState {
   @Action
   public async loadTeamRoster(teamId: number): Promise<void> {
     const roster: Roster = await teamsApi.getTeamRoster(teamId);
+    roster.rosterRelations.map((rr: RosterRelation) =>
+      PlayersModule.loadPlayer(rr.personId)
+    );
     this.addRoster(roster);
   }
 
