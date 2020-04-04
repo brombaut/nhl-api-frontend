@@ -1,4 +1,4 @@
-import { NhlApiTeamLink } from './nhl-api-team-link';
+import { NhlApiTeamLink } from "./nhl-api-team-link";
 
 export interface NhlApiStandingsTeamRecord {
   team: NhlApiTeamLink;
@@ -7,7 +7,7 @@ export interface NhlApiStandingsTeamRecord {
     losses: number;
     ot: number;
     type: string;
-  }
+  };
   regulationWins: number;
   goalsAgainst: number;
   goalsScored: number;

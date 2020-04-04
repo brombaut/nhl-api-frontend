@@ -1,4 +1,4 @@
-import { NhlApiStandingsTeamRecord } from '../nhl-api-types/nhl-api-standings-team-record';
+import { NhlApiStandingsTeamRecord } from "../nhl-api-types/nhl-api-standings-team-record";
 
 export class StandingsTeamRecord {
   teamId: number;
@@ -7,7 +7,7 @@ export class StandingsTeamRecord {
     losses: number;
     ot: number;
     type: string;
-  }
+  };
   regulationWins: number;
   goalsAgainst: number;
   goalsScored: number;

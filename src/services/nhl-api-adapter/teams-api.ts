@@ -2,9 +2,9 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Api } from "./api";
 import { NhlApiResponseTeams } from "@/types/nhl-api-types/nhl-api-response-teams";
 import { NhlApiTeam } from "@/types/nhl-api-types/nhl-api-team";
-import { Team } from '@/types/store-types/team';
-import { Roster } from '@/types/store-types/roster';
-import { NhlApiResponseRoster } from '@/types/nhl-api-types/nhl-api-response-roster';
+import { Team } from "@/types/store-types/team";
+import { Roster } from "@/types/store-types/roster";
+import { NhlApiResponseRoster } from "@/types/nhl-api-types/nhl-api-response-roster";
 
 const API_TEAMS = "https://statsapi.web.nhl.com/api/v1/teams";
 

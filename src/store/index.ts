@@ -1,11 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { TeamsState } from "./modules/teams";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
-});
+export interface RootState {
+  teams: TeamsState;
+}
+
+export default new Vuex.Store<RootState>({});

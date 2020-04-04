@@ -1,4 +1,4 @@
-import { NhlApiConferenceLink } from './nhl-api-conference-link';
+import { NhlApiConferenceLink } from "./nhl-api-conference-link";
 
 export interface NhlApiDivision {
   id: number;

@@ -1,4 +1,4 @@
-import { NhlApiConference } from '../nhl-api-types/nhl-api-conference';
+import { NhlApiConference } from "../nhl-api-types/nhl-api-conference";
 
 export class Conference {
   id: number;
