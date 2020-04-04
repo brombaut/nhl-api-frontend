@@ -11,9 +11,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import { TeamsModule } from "./store/modules/teams";
 
 @Component
-export default class App extends Vue {}
+export default class App extends Vue {
+  public loadInitialData(): void {
+    TeamsModule.loadTeams();
+  }
+
+  mounted() {
+    this.loadInitialData();
+  }
+}
 </script>
 
 <style lang="scss">
