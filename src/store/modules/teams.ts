@@ -33,6 +33,29 @@ class Teams extends VuexModule implements TeamsState {
     );
   }
 
+  public get teamsSortedByName(): Array<Team> {
+    return this._teams.sort((teamA: Team, teamB: Team) => {
+      if (teamA.name > teamB.name) {
+        return 1;
+      }
+      return -1;
+    });
+  }
+
+  @Action
+  public async loadTeams() {
+    const teams = await teamsApi.getTeams();
+    this.setTeams(teams);
+    if (this.teamsSortedByName.length > 0) {
+      this.setSelectedTeamId(this.teamsSortedByName[0].id);
+    }
+  }
+
+  @Action
+  public selectTeamById(teamId: number) {
+    this.setSelectedTeamId(teamId);
+  }
+
   @Mutation
   private setTeams(teams: Array<Team>) {
     this._teams = teams;
@@ -41,17 +64,6 @@ class Teams extends VuexModule implements TeamsState {
   @Mutation
   private setSelectedTeamId(teamId: number) {
     this._selectedTeamId = teamId;
-  }
-
-  @Action
-  public async loadTeams() {
-    const teams = await teamsApi.getTeams();
-    this.setTeams(teams);
-  }
-
-  @Action
-  public selectTeamById(teamId: number) {
-    this.setSelectedTeamId(teamId);
   }
 }
 
