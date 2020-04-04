@@ -1,4 +1,4 @@
-import { NhlApiRosterRelation } from '../nhl-api-types/nhl-api-roster-relation';
+import { NhlApiRosterRelation } from "../nhl-api-types/nhl-api-roster-relation";
 
 export class RosterRelation {
   personId: number;
@@ -7,7 +7,7 @@ export class RosterRelation {
     name: string;
     type: string;
     abbreviation: string;
-  }
+  };
   jerseyNumber: string;
 
   constructor(nhlApiRosterRelation: NhlApiRosterRelation) {

@@ -1,5 +1,5 @@
-import { NhlApiStandings } from '../nhl-api-types/nhl-api-standings';
-import { StandingsTeamRecord } from './stadings-team-record';
+import { NhlApiStandings } from "../nhl-api-types/nhl-api-standings";
+import { StandingsTeamRecord } from "./stadings-team-record";
 
 export class Standings {
   standingsType: string;
@@ -21,6 +21,8 @@ export class Standings {
     if (nhlApiStandings.conference) {
       this.conferenceId = nhlApiStandings.conference.id;
     }
-    this.teamRecords = nhlApiStandings.teamRecords.map(teamRec => new StandingsTeamRecord(teamRec));
+    this.teamRecords = nhlApiStandings.teamRecords.map(
+      teamRec => new StandingsTeamRecord(teamRec)
+    );
   }
 }

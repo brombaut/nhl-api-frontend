@@ -11,12 +11,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-// import { standingsApi } from './services/nhl-api-adapter/standings-api';
-// import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
-// import { Roster } from './types/store-types/roster';
-// import { Team } from './types/store-types/team';
-// import { playersApi } from "@/services/nhl-api-adapter/players-api";
-// import { Player } from "./types/store-types/player";
+import { getModule } from "vuex-module-decorators";
+import Teams from "./store/modules/teams";
 
 @Component
 export default class App extends Vue {
@@ -33,6 +29,12 @@ export default class App extends Vue {
     // standingsApi.getRegularSeasonStandings().then((response: any) => {
     //   console.log(response);
     // });
+    // TeamsModule.loadTeams();
+    // const teamsModule = getModule(Teams);
+    // console.log(getModule);
+    const teamsModule = getModule(Teams);
+    console.log(teamsModule);
+    teamsModule.loadTeams();
   }
 }
 </script>

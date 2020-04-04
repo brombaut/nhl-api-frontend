@@ -1,4 +1,4 @@
-import { NhlApiDivision } from '../nhl-api-types/nhl-api-division';
+import { NhlApiDivision } from "../nhl-api-types/nhl-api-division";
 
 export class Division {
   id: number;

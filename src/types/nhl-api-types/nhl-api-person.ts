@@ -1,4 +1,4 @@
-import { NhlApiTeamLink } from './nhl-api-team-link';
+import { NhlApiTeamLink } from "./nhl-api-team-link";
 
 export interface NhlApiPerson {
   id: number;

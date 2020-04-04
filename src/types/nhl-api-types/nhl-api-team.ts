@@ -1,5 +1,5 @@
-import { NhlApiConferenceLink } from './nhl-api-conference-link';
-import { NhlApiDivisionLink } from './nhl-api-division-link';
+import { NhlApiConferenceLink } from "./nhl-api-conference-link";
+import { NhlApiDivisionLink } from "./nhl-api-division-link";
 
 export interface NhlApiTeam {
   id: number;

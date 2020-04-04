@@ -1,4 +1,4 @@
-import { NhlApiStandingsType } from '../nhl-api-types/nhl-api-standings-type';
+import { NhlApiStandingsType } from "../nhl-api-types/nhl-api-standings-type";
 
 export class StandingsType {
   name: string;

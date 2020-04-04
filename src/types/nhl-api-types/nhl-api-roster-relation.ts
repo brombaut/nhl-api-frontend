@@ -1,4 +1,4 @@
-import { NhlApiPersonLink } from './nhl-api-person-link';
+import { NhlApiPersonLink } from "./nhl-api-person-link";
 
 export interface NhlApiRosterRelation {
   person: NhlApiPersonLink;
@@ -7,6 +7,6 @@ export interface NhlApiRosterRelation {
     name: string;
     type: string;
     abbreviation: string;
-  }
+  };
   jerseyNumber: string;
 }
