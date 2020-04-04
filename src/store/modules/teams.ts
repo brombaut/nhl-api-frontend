@@ -8,6 +8,7 @@ import {
 import store from "@/store";
 import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { Team } from "@/types/store-types/team";
+import { RostersModule } from "./rosters";
 
 export interface TeamsState {
   teams: Array<Team>;
@@ -52,13 +53,17 @@ class Teams extends VuexModule implements TeamsState {
     const teams = await teamsApi.getTeams();
     this.setTeams(teams);
     if (this.teamsSortedByName.length > 0) {
-      this.setSelectedTeamId(this.teamsSortedByName[0].id);
+      const firstTeamId: number = this.teamsSortedByName[0].id;
+      this.selectTeamById(firstTeamId);
     }
   }
 
   @Action
   public selectTeamById(teamId: number) {
     this.setSelectedTeamId(teamId);
+    if (!RostersModule.teamRoster(teamId)) {
+      RostersModule.loadTeamRoster(teamId);
+    }
   }
 
   @Mutation
