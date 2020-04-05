@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <TeamSelector />
-    <router-view />
+    <main>
+      <MainHeader />
+      <router-view />
+    </main>
   </div>
 </template>
 
@@ -13,10 +16,12 @@ import { DivisionsModule } from "./store/modules/divisions";
 import { ConferencesModule } from "./store/modules/conferences";
 import { StandingsModule } from "./store/modules/standings";
 import TeamSelector from "@/components/TeamSelector.vue";
+import MainHeader from "@/components/MainHeader.vue";
 
 @Component({
   components: {
-    TeamSelector
+    TeamSelector,
+    MainHeader
   }
 })
 export default class App extends Vue {
@@ -48,11 +53,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: white;
-  // color: #2c3e50;
   background-color: #1c2532;
   height: 100%;
   width: 100%;
   display: flex;
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
   ::-webkit-scrollbar {
     width: 8px;
