@@ -1,7 +1,7 @@
 import { NhlApiStandings } from "../nhl-api-types/nhl-api-standings";
 import { StandingsTeamRecord } from "./stadings-team-record";
 
-export class Standings {
+export class StandingsRecord {
   standingsType: string;
   league: {
     id: number;

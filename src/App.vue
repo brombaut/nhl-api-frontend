@@ -14,6 +14,7 @@ import { Component } from "vue-property-decorator";
 import { TeamsModule } from "./store/modules/teams";
 import { DivisionsModule } from "./store/modules/divisions";
 import { ConferencesModule } from "./store/modules/conferences";
+import { StandingsModule } from "./store/modules/standings";
 
 @Component
 export default class App extends Vue {
@@ -21,6 +22,7 @@ export default class App extends Vue {
     ConferencesModule.loadConferences();
     DivisionsModule.loadDivisions();
     TeamsModule.loadTeams();
+    StandingsModule.loadStandingsTypes();
   }
 
   mounted() {
