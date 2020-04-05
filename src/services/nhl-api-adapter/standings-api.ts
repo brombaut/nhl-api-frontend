@@ -4,7 +4,7 @@ import { NhlApiResponseStandingsTypes } from "@/types/nhl-api-types/nhl-api-resp
 import { NhlApiResponseStandings } from "@/types/nhl-api-types/nhl-api-response-standings";
 import { StandingsType } from "@/types/store-types/standings-type";
 import { NhlApiStandingsType } from "@/types/nhl-api-types/nhl-api-standings-type";
-import { Standings } from "@/types/store-types/standings";
+import { StandingsRecord } from "@/types/store-types/standings";
 
 const API_STANDINGS = "https://statsapi.web.nhl.com/api/v1/standings";
 const API_STANDINGS_TYPES =
@@ -37,12 +37,12 @@ class StandingsApi extends Api {
       });
   }
 
-  public getRegularSeasonStandings(): Promise<Array<Standings>> {
+  public getRegularSeasonStandings(): Promise<Array<StandingsRecord>> {
     return this.get<NhlApiResponseStandings>(API_STANDINGS)
       .then((standingsApiResponse: AxiosResponse<NhlApiResponseStandings>) => {
         const { records: nhlApiStandings } = standingsApiResponse.data;
-        const divisionStandings: Array<Standings> = nhlApiStandings.map(
-          standings => new Standings(standings)
+        const divisionStandings: Array<StandingsRecord> = nhlApiStandings.map(
+          standings => new StandingsRecord(standings)
         );
         return divisionStandings;
       })
@@ -51,12 +51,14 @@ class StandingsApi extends Api {
       });
   }
 
-  public getStandingsByType(type: StandingsType): Promise<Array<Standings>> {
+  public getStandingsByType(
+    type: StandingsType
+  ): Promise<Array<StandingsRecord>> {
     return this.get<NhlApiResponseStandings>(`${API_STANDINGS}/${type.name}`)
       .then((standingsApiResponse: AxiosResponse<NhlApiResponseStandings>) => {
         const { records: nhlApiStandings } = standingsApiResponse.data;
-        const divisionStandings: Array<Standings> = nhlApiStandings.map(
-          standings => new Standings(standings)
+        const divisionStandings: Array<StandingsRecord> = nhlApiStandings.map(
+          standings => new StandingsRecord(standings)
         );
         return divisionStandings;
       })
