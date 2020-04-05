@@ -3,4 +3,5 @@ export interface TeamLogo {
   abbreviation: string;
   primaryColor: string;
   secondaryColor: string;
+  backdropColor?: string;
 }

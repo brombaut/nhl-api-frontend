@@ -39,6 +39,11 @@ class Teams extends VuexModule implements TeamsState {
       this._teams.find((team: Team) => team.id === id) || null;
   }
 
+  public get teamByAbbreviation() {
+    return (abbv: string) =>
+      this._teams.find((team: Team) => team.abbreviation === abbv) || null;
+  }
+
   public get teamsSortedByName(): Array<Team> {
     return this._teams.sort((teamA: Team, teamB: Team) => {
       if (teamA.name > teamB.name) {
