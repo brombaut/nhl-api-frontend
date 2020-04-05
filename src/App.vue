@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <TeamSelector />
-    <main>
-      <MainHeader />
+    <MenuPane />
+    <main :style="mainStyles">
+      <!-- <MainHeader /> -->
       <router-view />
     </main>
   </div>
@@ -16,15 +17,22 @@ import { DivisionsModule } from "./store/modules/divisions";
 import { ConferencesModule } from "./store/modules/conferences";
 import { StandingsModule } from "./store/modules/standings";
 import TeamSelector from "@/components/TeamSelector.vue";
-import MainHeader from "@/components/MainHeader.vue";
+import MenuPane from "@/components/MenuPane.vue";
+import { TeamLogosModule } from "./store/modules/team-logos";
 
 @Component({
   components: {
     TeamSelector,
-    MainHeader
+    MenuPane
   }
 })
 export default class App extends Vue {
+  private get mainStyles() {
+    return {
+      "background-color": TeamLogosModule.selectedBackdropColor
+    };
+  }
+
   public loadInitialData(): void {
     ConferencesModule.loadConferences();
     DivisionsModule.loadDivisions();
@@ -62,6 +70,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    transition: 0.3s background-color;
   }
 
   ::-webkit-scrollbar {

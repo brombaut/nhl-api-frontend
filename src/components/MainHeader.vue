@@ -62,13 +62,13 @@ export default class MainHeader extends Vue {
 <style lang="scss">
 .header {
   h1 {
-    font-size: 5rem;
+    font-size: 4rem;
     text-transform: uppercase;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
     margin-top: 8px;
     margin-bottom: 8px;
-    font-family: "Anton", sans-serif;
+    font-family: sans-serif;
     height: 142px;
     border-bottom: 4px solid white;
     width: 100%;

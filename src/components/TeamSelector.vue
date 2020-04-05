@@ -18,8 +18,8 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TeamSelectorIcon from "@/components/TeamSelectorIcon.vue";
-import teamLogos from "@/data/team-logos";
 import { TeamLogo } from "../types/data-types/team-logo";
+import { TeamLogosModule } from "../store/modules/team-logos";
 
 @Component({
   components: {
@@ -28,13 +28,7 @@ import { TeamLogo } from "../types/data-types/team-logo";
 })
 export default class TeamSelector extends Vue {
   get teamLogos(): Array<TeamLogo> {
-    const sorted = teamLogos.sort((a: TeamLogo, b: TeamLogo) => {
-      if (a.abbreviation < b.abbreviation) {
-        return -1;
-      }
-      return 1;
-    });
-    return sorted;
+    return TeamLogosModule.sortedTeamLogos;
   }
 
   private updateHighlight(el: HTMLInputElement): void {
@@ -66,7 +60,7 @@ export default class TeamSelector extends Vue {
   flex-direction: column;
   align-items: center;
   height: calc(100% - 0px);
-  width: 120px;
+  width: 132px;
 
   .scrollable {
     overflow-y: auto;

@@ -34,7 +34,7 @@ export default class TeamSelectorIcon extends Vue {
     return require(`../assets/team-logos/${this.teamLogo.fileName}`);
   }
 
-  teamIconClicked() {
+  private teamIconClicked() {
     const team = TeamsModule.teamByAbbreviation(this.teamLogo.abbreviation);
     if (team) {
       TeamsModule.selectTeamById(team.id);
