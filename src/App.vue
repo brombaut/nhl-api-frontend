@@ -25,9 +25,9 @@ export default class App extends Vue {
     StandingsModule.loadStandingsTypes();
   }
 
-  mounted() {
-    this.loadInitialData();
-  }
+  // mounted() {
+  //   this.loadInitialData();
+  // }
 }
 </script>
 
