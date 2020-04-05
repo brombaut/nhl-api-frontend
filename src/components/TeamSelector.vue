@@ -65,7 +65,6 @@ export default class TeamSelector extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // padding: 8px 0px;
   height: calc(100% - 0px);
   width: 120px;
 
