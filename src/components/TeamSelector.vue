@@ -1,5 +1,5 @@
 <template>
-  <nav id="team-selector">
+  <nav id="team-selector" :style="teamSelectorStyles">
     <div class="scrollable">
       <span class="highlight"></span>
       <ul>
@@ -29,6 +29,12 @@ import { TeamLogosModule } from "../store/modules/team-logos";
 export default class TeamSelector extends Vue {
   get teamLogos(): Array<TeamLogo> {
     return TeamLogosModule.sortedTeamLogos;
+  }
+
+  get teamSelectorStyles() {
+    return {
+      "background-color": TeamLogosModule.selectedPrimaryColor
+    };
   }
 
   private updateHighlight(el: HTMLInputElement): void {
@@ -61,6 +67,7 @@ export default class TeamSelector extends Vue {
   align-items: center;
   height: calc(100% - 0px);
   width: 132px;
+  transition: 0.3s background-color;
 
   .scrollable {
     overflow-y: auto;

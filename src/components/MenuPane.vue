@@ -41,7 +41,7 @@ export default class MenuPane extends Vue {
 
   get menuPaneStyle() {
     return {
-      "background-color": TeamLogosModule.selectedBackdropColor,
+      "background-color": TeamLogosModule.selectedPrimaryColor,
       color: TeamLogosModule.selectedPrimaryColor,
       "border-color": TeamLogosModule.selectedSecondaryColor
     };
@@ -78,14 +78,14 @@ export default class MenuPane extends Vue {
     transition: 0.3s background-color;
 
     img {
-      height: 240px;
-      width: 240px;
+      height: 260px;
+      width: 260px;
       border: 4px solid #1c2532;
       border-radius: 50%;
       margin: 4px 0px;
       transition-duration: 100ms;
       position: absolute;
-      bottom: -80px;
+      bottom: -100px;
     }
 
     svg {
