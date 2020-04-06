@@ -40,7 +40,8 @@ const teamLogos: Array<TeamLogo> = [
     fileName: "DET.jpg",
     abbreviation: "DET",
     primaryColor: "#CE1126",
-    secondaryColor: "#FFFFFF"
+    secondaryColor: "#FFFFFF",
+    backdropColor: "#283243"
   },
   {
     fileName: "OTT.jpg",

@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import store from "@/store";
 import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
-import { Team } from "@/types/store-types/team";
+import { Team, NullTeam } from "@/types/store-types/team";
 import { RostersModule } from "./rosters";
 
 export interface TeamsState {
@@ -28,20 +28,22 @@ class Teams extends VuexModule implements TeamsState {
     return this._selectedTeamId;
   }
 
-  public get selectedTeam(): Team | null {
+  public get selectedTeam(): Team {
     return (
-      this._teams.find((team: Team) => team.id === this._selectedTeamId) || null
+      this._teams.find((team: Team) => team.id === this._selectedTeamId) ||
+      new NullTeam()
     );
   }
 
-  public get teamById() {
+  public get teamById(): (id: number) => Team {
     return (id: number) =>
-      this._teams.find((team: Team) => team.id === id) || null;
+      this._teams.find((team: Team) => team.id === id) || new NullTeam();
   }
 
-  public get teamByAbbreviation() {
+  public get teamByAbbreviation(): (abbv: string) => Team {
     return (abbv: string) =>
-      this._teams.find((team: Team) => team.abbreviation === abbv) || null;
+      this._teams.find((team: Team) => team.abbreviation === abbv) ||
+      new NullTeam();
   }
 
   public get teamsSortedByName(): Array<Team> {
@@ -54,7 +56,7 @@ class Teams extends VuexModule implements TeamsState {
   }
 
   @Action
-  public async loadTeams() {
+  public async loadTeams(): Promise<void> {
     const teams = await teamsApi.getTeams();
     this.setTeams(teams);
     if (this.teamsSortedByName.length > 0) {
@@ -64,7 +66,7 @@ class Teams extends VuexModule implements TeamsState {
   }
 
   @Action
-  public selectTeamById(teamId: number) {
+  public selectTeamById(teamId: number): void {
     this.setSelectedTeamId(teamId);
     if (!RostersModule.teamRoster(teamId)) {
       RostersModule.loadTeamRoster(teamId);
@@ -72,12 +74,12 @@ class Teams extends VuexModule implements TeamsState {
   }
 
   @Mutation
-  private setTeams(teams: Array<Team>) {
+  private setTeams(teams: Array<Team>): void {
     this._teams = teams;
   }
 
   @Mutation
-  private setSelectedTeamId(teamId: number) {
+  private setSelectedTeamId(teamId: number): void {
     this._selectedTeamId = teamId;
   }
 }

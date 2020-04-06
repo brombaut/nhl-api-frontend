@@ -28,7 +28,7 @@ class Players extends VuexModule implements PlayersState {
   }
 
   @Mutation
-  private addPlayer(player: Player) {
+  private addPlayer(player: Player): void {
     this._players.push(player);
   }
 }

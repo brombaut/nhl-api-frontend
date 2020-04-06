@@ -68,7 +68,7 @@ class Standings extends VuexModule implements StandingsState {
   }
 
   @Action
-  public selectStandingsType(st: StandingsType) {
+  public selectStandingsType(st: StandingsType): void {
     this.setSelectedStandingsType(st.name);
     if (this.selectedStandings.length === 0) {
       this.loadStandingsByType(st);
@@ -76,17 +76,17 @@ class Standings extends VuexModule implements StandingsState {
   }
 
   @Mutation
-  private setStandingsTypes(st: Array<StandingsType>) {
+  private setStandingsTypes(st: Array<StandingsType>): void {
     this._standingsTypes = st;
   }
 
   @Mutation
-  private addStandingsRecord(standingsRecord: StandingsRecord) {
+  private addStandingsRecord(standingsRecord: StandingsRecord): void {
     this._standings.push(standingsRecord);
   }
 
   @Mutation
-  private setSelectedStandingsType(name: string) {
+  private setSelectedStandingsType(name: string): void {
     this._selectedStandingsType = name;
   }
 }

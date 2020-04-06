@@ -2,7 +2,7 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Api } from "./api";
 import { NhlApiResponseTeams } from "@/types/nhl-api-types/nhl-api-response-teams";
 import { NhlApiTeam } from "@/types/nhl-api-types/nhl-api-team";
-import { Team } from "@/types/store-types/team";
+import { Team, TeamEntity } from "@/types/store-types/team";
 import { Roster } from "@/types/store-types/roster";
 import { NhlApiResponseRoster } from "@/types/nhl-api-types/nhl-api-response-roster";
 
@@ -20,7 +20,7 @@ class TeamsApi extends Api {
         const { teams: nhlApiTeams } = teamsApiResponse.data;
         const teams: Array<Team> = [];
         nhlApiTeams.forEach((nhlApiTeam: NhlApiTeam) => {
-          teams.push(new Team(nhlApiTeam));
+          teams.push(new TeamEntity(nhlApiTeam));
         });
         return teams;
       })

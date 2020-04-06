@@ -1,8 +1,9 @@
 import { VuexModule, Module, getModule } from "vuex-module-decorators";
 import store from "@/store";
-import { TeamLogo } from "@/types/data-types/team-logo";
+import { TeamLogo, NullTeamLogo } from "@/types/data-types/team-logo";
 import teamLogos from "@/data/team-logos";
 import { TeamsModule } from "./teams";
+import { NullTeam } from "@/types/store-types/team";
 
 export interface TeamLogosState {
   teamLogos: Array<TeamLogo>;
@@ -30,36 +31,27 @@ class TeamLogos extends VuexModule implements TeamLogosState {
     return sorted;
   }
 
-  public get selectedTeamLogo(): TeamLogo | null {
-    if (!TeamsModule.selectedTeam) {
-      return null;
+  public get selectedTeamLogo(): TeamLogo {
+    if (TeamsModule.selectedTeam instanceof NullTeam) {
+      return new NullTeamLogo();
     }
     const selectedAbbreviation = TeamsModule.selectedTeam.abbreviation;
     const teamLogoObj = this._teamLogos.find((t: TeamLogo) => {
       return t.abbreviation === selectedAbbreviation;
     });
-    return teamLogoObj || null;
+    return teamLogoObj || new NullTeamLogo();
   }
 
   public get selectedPrimaryColor(): string {
-    if (!this.selectedTeamLogo) {
-      return "";
-    }
     return this.selectedTeamLogo.primaryColor;
   }
 
   public get selectedSecondaryColor(): string {
-    if (!this.selectedTeamLogo) {
-      return "";
-    }
     return this.selectedTeamLogo.secondaryColor;
   }
 
   public get selectedBackdropColor(): string {
-    if (!this.selectedTeamLogo) {
-      return "#283243";
-    }
-    return this.selectedTeamLogo.backdropColor || "#283243";
+    return this.selectedTeamLogo.backdropColor;
   }
 
   public get selectedFilename(): string {
