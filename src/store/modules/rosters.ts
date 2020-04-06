@@ -24,17 +24,17 @@ class Rosters extends VuexModule implements RostersState {
     return this._rosters;
   }
 
-  public get teamRoster() {
+  public get teamRoster(): (teamId: number) => Array<RosterRelation> {
     return (teamId: number) =>
       this._rosters.find((roster: Roster) => roster.teamId === teamId)
-        ?.rosterRelations || null;
+        ?.rosterRelations || [];
   }
 
-  public get selectedTeamRoster() {
+  public get selectedTeamRoster(): Array<RosterRelation> {
     return (
       this._rosters.find(
         (roster: Roster) => roster.teamId === TeamsModule.selectedTeamId
-      )?.rosterRelations || null
+      )?.rosterRelations || []
     );
   }
 
@@ -48,7 +48,7 @@ class Rosters extends VuexModule implements RostersState {
   }
 
   @Mutation
-  private addRoster(roster: Roster) {
+  private addRoster(roster: Roster): void {
     this._rosters.push(roster);
   }
 }

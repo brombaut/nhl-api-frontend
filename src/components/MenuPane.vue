@@ -19,11 +19,14 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { TeamsModule } from "../store/modules/teams";
 import { TeamLogosModule } from "../store/modules/team-logos";
+import { NullTeam } from "../types/store-types/team";
 
 @Component
 export default class MenuPane extends Vue {
   get selectedTeam() {
-    return TeamsModule.selectedTeam;
+    return TeamsModule.selectedTeam instanceof NullTeam
+      ? null
+      : TeamsModule.selectedTeam;
   }
 
   get headerStyle() {

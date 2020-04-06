@@ -21,7 +21,7 @@ class Divisions extends VuexModule implements DivisionsState {
     return this._divisions;
   }
 
-  public get divisionById() {
+  public get divisionById(): (id: number) => Division | null {
     return (id: number) =>
       this._divisions.find((division: Division) => division.id === id) || null;
   }
@@ -33,7 +33,7 @@ class Divisions extends VuexModule implements DivisionsState {
   }
 
   @Mutation
-  private setDivisions(divisions: Array<Division>) {
+  private setDivisions(divisions: Array<Division>): void {
     this._divisions = divisions;
   }
 }

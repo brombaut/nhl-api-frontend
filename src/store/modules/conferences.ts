@@ -21,7 +21,7 @@ class Conferences extends VuexModule implements ConferencesState {
     return this._conferences;
   }
 
-  public get conferenceById() {
+  public get conferenceById(): (id: number) => Conference | null {
     return (id: number) =>
       this._conferences.find(
         (conference: Conference) => conference.id === id
@@ -35,7 +35,7 @@ class Conferences extends VuexModule implements ConferencesState {
   }
 
   @Mutation
-  private setConferences(conferences: Array<Conference>) {
+  private setConferences(conferences: Array<Conference>): void {
     this._conferences = conferences;
   }
 }
