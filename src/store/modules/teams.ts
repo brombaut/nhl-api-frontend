@@ -60,14 +60,22 @@ class Teams extends VuexModule implements TeamsState {
     const teams = await teamsApi.getTeams();
     this.setTeams(teams);
     if (this.teamsSortedByName.length > 0) {
-      const firstTeamId: number = this.teamsSortedByName[0].id;
-      this.selectTeamById(firstTeamId);
+      const localStorageTeamId = Number(
+        window.localStorage.getItem("selectedTeamId")
+      );
+      if (localStorageTeamId) {
+        this.selectTeamById(localStorageTeamId);
+      } else {
+        const firstTeamId: number = this.teamsSortedByName[0].id;
+        this.selectTeamById(firstTeamId);
+      }
     }
   }
 
   @Action
   public selectTeamById(teamId: number): void {
     this.setSelectedTeamId(teamId);
+    window.localStorage.setItem("selectedTeamId", teamId.toString());
     if (!RostersModule.teamRoster(teamId)) {
       RostersModule.loadTeamRoster(teamId);
     }
