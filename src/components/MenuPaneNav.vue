@@ -3,7 +3,9 @@
     <ul>
       <li
         @click="setRoute('/standings')"
-        :class="{ selected: currentRoute === 'standings' }"
+        :class="{
+          selected: currentRoute === 'standings' || currentRoute === 'root'
+        }"
         :style="navItemStyle"
       >
         Standings
@@ -23,7 +25,7 @@
         Roster
       </li>
       <li
-        @click="setRoute('/line-combinations')"
+        @click="setRoute('/lines')"
         :class="{ selected: currentRoute === 'lines' }"
         :style="navItemStyle"
       >
@@ -70,6 +72,10 @@ export default class MenuPaneNav extends Vue {
       "-webkit-text-stroke-width": "1px",
       "-webkit-text-stroke-color": TeamLogosModule.selectedBackdropColor
     };
+  }
+
+  setRoute(newRoutePath: string): void {
+    this.$router.push(newRoutePath);
   }
 }
 </script>
@@ -126,8 +132,7 @@ nav {
     }
 
     .selected {
-      background: #8c9096;
-      opacity: 0.5;
+      background-color: #8c9096c9;
     }
   }
 }
