@@ -66,7 +66,7 @@ export default class TeamSelector extends Vue {
   flex-direction: column;
   align-items: center;
   height: calc(100% - 0px);
-  width: 132px;
+  width: 108px;
   transition: 0.3s background-color;
 
   .scrollable {

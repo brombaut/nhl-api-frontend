@@ -8,9 +8,7 @@
         :style="imageStyle"
       />
     </header>
-    <nav class="menu-pane-options-wrapper">
-      <ul></ul>
-    </nav>
+    <MenuPaneNav />
   </div>
 </template>
 
@@ -20,8 +18,13 @@ import { Component } from "vue-property-decorator";
 import { TeamsModule } from "../store/modules/teams";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import { NullTeam } from "../types/store-types/team";
+import MenuPaneNav from "./MenuPaneNav.vue";
 
-@Component
+@Component({
+  components: {
+    MenuPaneNav
+  }
+})
 export default class MenuPane extends Vue {
   get selectedTeam() {
     return TeamsModule.selectedTeam instanceof NullTeam
@@ -45,7 +48,6 @@ export default class MenuPane extends Vue {
   get menuPaneStyle() {
     return {
       "background-color": TeamLogosModule.selectedPrimaryColor,
-      color: TeamLogosModule.selectedPrimaryColor,
       "border-color": TeamLogosModule.selectedSecondaryColor
     };
   }
@@ -62,13 +64,15 @@ export default class MenuPane extends Vue {
 
 <style lang="scss">
 #menu-pane {
-  width: 360px;
+  width: 320px;
   background-color: #283243;
   border-right: 8px solid #323e4f;
   border-left: 8px solid #323e4f;
-  transition: 0.4s;
+  transition: ease 0.3s;
   padding-top: 0px;
   position: relative;
+  display: flex;
+  flex-direction: column;
 
   header {
     width: 100%;
@@ -77,8 +81,7 @@ export default class MenuPane extends Vue {
     position: relative;
     display: flex;
     justify-content: center;
-    margin-bottom: 40px;
-    transition: 0.3s background-color;
+    transition: ease 0.3s background-color;
 
     img {
       height: 260px;
@@ -86,7 +89,6 @@ export default class MenuPane extends Vue {
       border: 4px solid #1c2532;
       border-radius: 50%;
       margin: 4px 0px;
-      transition-duration: 100ms;
       position: absolute;
       bottom: -100px;
     }
@@ -96,42 +98,6 @@ export default class MenuPane extends Vue {
       bottom: -48px;
       color: black;
       border-radius: 50%;
-    }
-  }
-
-  nav {
-    margin-top: 60px;
-    width: 100%;
-
-    ul {
-      // margin: 16px 0px;
-      // display: flex;
-      // flex-direction: column;
-      // align-items: flex-start;
-      // list-style: none;
-      // padding-left: 0;
-      // width: 100%;
-
-      // li {
-      //   font-size: 1rem;
-      //   transition: 0.3s;
-      //   margin: 8px 8px;
-      //   padding: 8px;
-      //   text-align: left;
-      //   width: calc(100% - 32px);
-      //   border-radius: 8px;
-      //   text-transform: uppercase;
-      //   text-overflow: nowrap;
-
-      //   &:hover {
-      //     background-color: #6b7d96;
-      //     cursor: pointer;
-      //   }
-      // }
-
-      // .selected {
-      //   background-color: #566479;
-      // }
     }
   }
 }
