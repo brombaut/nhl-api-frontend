@@ -34,7 +34,7 @@ const teamLogos: Array<TeamLogo> = [
     abbreviation: "BUF",
     primaryColor: "#002654",
     secondaryColor: "#FCB514",
-    backdropColor: "#ADAFAA"
+    backdropColor: "#FFFFFF"
   },
   {
     fileName: "DET.jpg",

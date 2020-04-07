@@ -17,6 +17,13 @@ class TeamLogos extends VuexModule implements TeamLogosState {
     return this._teamLogos;
   }
 
+  public get teamLogoByAbbreviation() {
+    return (abbv: string) =>
+      this._teamLogos.find(
+        (teamLogo: TeamLogo) => teamLogo.abbreviation === abbv
+      ) || new NullTeamLogo();
+  }
+
   public get sortedTeamLogos(): Array<TeamLogo> {
     const sorted = teamLogos.sort((a: TeamLogo, b: TeamLogo) => {
       const teamA = TeamsModule.teamByAbbreviation(a.abbreviation);
