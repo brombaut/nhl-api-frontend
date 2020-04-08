@@ -86,6 +86,7 @@ export default class StandingsTypeTab extends Vue {
   padding-bottom: 16px;
   font-size: 1.3rem;
   font-weight: bold;
+  text-transform: uppercase;
 
   hr {
     margin-bottom: 0;

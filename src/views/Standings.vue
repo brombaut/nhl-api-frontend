@@ -33,13 +33,16 @@
         </thead>
         <tbody>
           <tr
-            v-for="(record, index) in standings.teamRecords"
+            v-for="(record, rowIndex) in standings.teamRecords"
             :key="record.teamId"
-            :style="tableDataRowStyle"
+            :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
           >
-            <td :style="tableDataCellStyle">{{ index + 1 }}</td>
+            <td :style="tableDataCellBrightStyle">{{ rowIndex + 1 }}</td>
             <td :style="tableDataCellStyle" class="team-name-cell">
-              <div class="team-name-container">
+              <div
+                class="team-name-container"
+                :style="teamDataCellStyles(record.teamId)"
+              >
                 <img :src="imageUrlByTeamId(record.teamId)" />
                 <span>{{ teamNameById(record.teamId) }}</span>
               </div>
@@ -64,7 +67,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { StandingsModule } from "../store/modules/standings";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import { TeamsModule } from "../store/modules/teams";
@@ -72,6 +75,8 @@ import { StandingsRecord } from "../types/store-types/standings";
 import { DivisionsModule } from "../store/modules/divisions";
 import StandingsTypeSelector from "@/components/StandingsTypeSelector.vue";
 import { ConferencesModule } from "../store/modules/conferences";
+import { StandingsTeamRecord } from "../types/store-types/stadings-team-record";
+import ColorUtils from "@/utils/color-utils";
 
 @Component({
   components: {
@@ -79,6 +84,9 @@ import { ConferencesModule } from "../store/modules/conferences";
   }
 })
 export default class Standings extends Vue {
+  evenRowColor = "";
+  oddRowColor = "";
+
   getTableHeader(standingsObj: StandingsRecord): string {
     if (standingsObj.divisionId) {
       return DivisionsModule.divisionById(standingsObj.divisionId)?.name || "";
@@ -92,7 +100,23 @@ export default class Standings extends Vue {
   }
 
   get standingsTableData() {
-    return StandingsModule.selectedStandings;
+    const sortedRecords: Array<StandingsRecord> = [];
+    const standingsRecords = [...StandingsModule.selectedStandings];
+    const selectedTeamId = TeamsModule.selectedTeamId;
+    for (let i = 0; i < standingsRecords.length; ++i) {
+      const recordContainsTeamId: boolean = standingsRecords[
+        i
+      ].teamRecords.some((teamRec: StandingsTeamRecord) => {
+        return teamRec.teamId === selectedTeamId;
+      });
+      if (recordContainsTeamId) {
+        sortedRecords.push(standingsRecords[i]);
+        standingsRecords.splice(i, 1);
+        break;
+      }
+    }
+    sortedRecords.push(...standingsRecords);
+    return sortedRecords;
   }
 
   get tableStyle() {
@@ -108,16 +132,35 @@ export default class Standings extends Vue {
     };
   }
 
-  get tableDataRowStyle() {
-    return {
-      "border-color": TeamLogosModule.selectedPrimaryColor
-    };
-  }
-
   get tableDataCellStyle() {
     return {
       "border-color": TeamLogosModule.selectedSecondaryColor
     };
+  }
+
+  get tableDataCellBrightStyle() {
+    return {
+      "background-color": TeamLogosModule.selectedPrimaryColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor
+    };
+  }
+
+  get evenTableRowStyle() {
+    return {
+      "background-color": this.evenRowColor
+    };
+  }
+  get oddTableRowStyle() {
+    return {
+      "background-color": this.oddRowColor
+    };
+  }
+
+  teamDataCellStyles(teamId: number) {
+    if (TeamsModule.selectedTeamId === teamId) {
+      return this.tableDataCellBrightStyle;
+    }
+    return this.tableDataCellStyle;
   }
 
   teamNameById(teamId: number): string {
@@ -128,6 +171,26 @@ export default class Standings extends Vue {
     const team = TeamsModule.teamById(teamId);
     const teamLogo = TeamLogosModule.teamLogoByAbbreviation(team.abbreviation);
     return require(`../assets/team-logos/${teamLogo.fileName}`);
+  }
+
+  get selectedTeamId() {
+    return TeamsModule.selectedTeamId;
+  }
+
+  @Watch("selectedTeamId")
+  setTableRowStyle() {
+    this.evenRowColor = ColorUtils.lightenDarkenColor(
+      TeamLogosModule.selectedBackdropColor,
+      -10
+    );
+    this.oddRowColor = ColorUtils.lightenDarkenColor(
+      TeamLogosModule.selectedBackdropColor,
+      10
+    );
+  }
+
+  mounted() {
+    this.setTableRowStyle();
   }
 }
 </script>
@@ -179,9 +242,14 @@ export default class Standings extends Vue {
             padding: 8px;
             border: 1px solid white;
 
+            &.team-name-cell {
+              padding: 0;
+            }
+
             .team-name-container {
               display: flex;
               align-items: center;
+              padding: 8px;
 
               img {
                 height: 40px;
