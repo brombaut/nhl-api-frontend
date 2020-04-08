@@ -76,6 +76,7 @@ body {
     display: flex;
     flex-direction: column;
     transition: 0.3s background-color;
+    position: relative;
   }
 
   ::-webkit-scrollbar {
