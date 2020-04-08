@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato"
+      rel="stylesheet"
+    />
     <TeamSelector />
     <MenuPane />
     <main :style="mainStyles">
@@ -56,7 +60,7 @@ body {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Lato", Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -65,12 +69,14 @@ body {
   height: 100%;
   width: 100%;
   display: flex;
+  user-select: none;
 
   main {
     flex: 1;
     display: flex;
     flex-direction: column;
     transition: 0.3s background-color;
+    position: relative;
   }
 
   ::-webkit-scrollbar {

@@ -48,7 +48,7 @@ class Standings extends VuexModule implements StandingsState {
     const standingsTypes: Array<StandingsType> = await standingsApi.getStandingsTypes();
     this.setStandingsTypes(standingsTypes);
     const initialStandingsType = standingsTypes.find(
-      (st: StandingsType) => st.name === "regularSeason"
+      (st: StandingsType) => st.name === "byDivision"
     );
     if (initialStandingsType) {
       this.selectStandingsType(initialStandingsType);

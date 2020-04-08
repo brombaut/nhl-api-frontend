@@ -75,6 +75,9 @@ export default class MenuPaneNav extends Vue {
   }
 
   setRoute(newRoutePath: string): void {
+    if (newRoutePath === this.$route.path) {
+      return;
+    }
     this.$router.push(newRoutePath);
   }
 }
@@ -82,7 +85,7 @@ export default class MenuPaneNav extends Vue {
 
 <style lang="scss" scoped>
 nav {
-  margin-top: 60px;
+  margin-top: 68px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -112,11 +115,11 @@ nav {
     li,
     a {
       font-size: 2.3rem;
-      font-weight: 700;
-      margin: 2px 8px;
-      padding: 8px;
+      font-weight: 800;
+      margin: 4px 8px;
+      padding: 4px 12px;
       text-align: left;
-      width: calc(100% - 32px);
+      width: calc(100% - 40px);
       border-radius: 8px;
       text-transform: uppercase;
       transition: ease 0.3s background-color;

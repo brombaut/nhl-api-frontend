@@ -34,7 +34,7 @@ const teamLogos: Array<TeamLogo> = [
     abbreviation: "BUF",
     primaryColor: "#002654",
     secondaryColor: "#FCB514",
-    backdropColor: "#ADAFAA"
+    backdropColor: "#FFFFFF"
   },
   {
     fileName: "DET.jpg",
@@ -110,7 +110,7 @@ const teamLogos: Array<TeamLogo> = [
     fileName: "WPG.jpg",
     abbreviation: "WPG",
     primaryColor: "#041E42",
-    secondaryColor: "#004C97",
+    secondaryColor: "#FFFFFF",
     backdropColor: "#AC162C"
   },
   {
@@ -180,8 +180,10 @@ const teamLogos: Array<TeamLogo> = [
     fileName: "ANA.jpg",
     abbreviation: "ANA",
     primaryColor: "#F47A38",
-    secondaryColor: "#B09862",
-    backdropColor: "#C1C6C8"
+    secondaryColor: "#C1C6C8",
+    backdropColor: "#B09862"
+    // secondaryColor: "#B09862",
+    // backdropColor: "#C1C6C8"
   },
   {
     fileName: "EDM.jpg",
