@@ -9,6 +9,7 @@ import store from "@/store";
 import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { Team, NullTeam } from "@/types/store-types/team";
 import { RostersModule } from "./rosters";
+import { StatsModule } from "./stats";
 
 export interface TeamsState {
   teams: Array<Team>;
@@ -79,10 +80,9 @@ class Teams extends VuexModule implements TeamsState {
     if (!RostersModule.teamRoster(teamId)) {
       RostersModule.loadTeamRoster(teamId);
     }
-    // TODO: Check if stats are loaded in
-    // teamsApi.getTeamStats(teamId).then((response: any) => {
-    //   console.log(response);
-    // });
+    if (StatsModule.teamStatsForTeam(teamId).length === 0) {
+      StatsModule.loadStatsForTeam(teamId);
+    }
   }
 
   @Mutation
