@@ -1,10 +1,18 @@
 import { NhlApiTeamStatSplit } from "./nhl-api-team-stat-split";
+import { NhlApiPlayerStatSplit } from "./nhl-api-player-stat-split";
 
-export interface NhlApiTeamStat {
+export interface NhlApiStat {
   type: {
     displayName: string;
   };
+}
+
+export interface NhlApiTeamStat extends NhlApiStat {
   splits: Array<NhlApiTeamStatSplit>;
+}
+
+export interface NhlApiPlayerStat extends NhlApiStat {
+  splits: Array<NhlApiPlayerStatSplit>;
 }
 
 /*

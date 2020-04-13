@@ -1,4 +1,4 @@
-import { NhlApiTeamStat } from "../nhl-api-types/nhl-api-team-stat";
+import { NhlApiTeamStat } from "../nhl-api-types/nhl-api-stat";
 import { TeamStatSplit } from "./team-stat-split";
 
 export class TeamStat {

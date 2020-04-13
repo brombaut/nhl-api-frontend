@@ -80,7 +80,7 @@ class Teams extends VuexModule implements TeamsState {
     if (!RostersModule.teamRoster(teamId)) {
       RostersModule.loadTeamRoster(teamId);
     }
-    if (StatsModule.teamStatsForTeam(teamId).length === 0) {
+    if (StatsModule.statsForTeam(teamId).length === 0) {
       StatsModule.loadStatsForTeam(teamId);
     }
   }
