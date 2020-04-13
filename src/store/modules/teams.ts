@@ -79,6 +79,10 @@ class Teams extends VuexModule implements TeamsState {
     if (!RostersModule.teamRoster(teamId)) {
       RostersModule.loadTeamRoster(teamId);
     }
+    // TODO: Check if stats are loaded in
+    // teamsApi.getTeamStats(teamId).then((response: any) => {
+    //   console.log(response);
+    // });
   }
 
   @Mutation
