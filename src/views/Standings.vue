@@ -86,6 +86,7 @@ import ColorUtils from "@/utils/color-utils";
 export default class Standings extends Vue {
   evenRowColor = "";
   oddRowColor = "";
+  standingsTableData: Array<StandingsRecord> = [];
 
   getTableHeader(standingsObj: StandingsRecord): string {
     if (standingsObj.divisionId) {
@@ -99,9 +100,13 @@ export default class Standings extends Vue {
     return standingsObj.league.name;
   }
 
-  get standingsTableData() {
+  get selectedStandings() {
+    return StandingsModule.selectedStandings;
+  }
+
+  setStandingTableData() {
     const sortedRecords: Array<StandingsRecord> = [];
-    const standingsRecords = [...StandingsModule.selectedStandings];
+    const standingsRecords = [...this.selectedStandings];
     const selectedTeamId = TeamsModule.selectedTeamId;
     for (let i = 0; i < standingsRecords.length; ++i) {
       const recordContainsTeamId: boolean = standingsRecords[
@@ -116,7 +121,7 @@ export default class Standings extends Vue {
       }
     }
     sortedRecords.push(...standingsRecords);
-    return sortedRecords;
+    this.standingsTableData = [...sortedRecords];
   }
 
   get tableStyle() {
@@ -178,6 +183,20 @@ export default class Standings extends Vue {
   }
 
   @Watch("selectedTeamId")
+  handleNewTeamSelected() {
+    this.standingsTableData.length = 0;
+    this.$nextTick().then(() => {
+      this.setStandingTableData();
+      this.setTableRowStyle();
+    });
+  }
+
+  @Watch("selectedStandings")
+  handleNewStanginsTypeSelected() {
+    this.setStandingTableData();
+    this.setTableRowStyle();
+  }
+
   setTableRowStyle() {
     this.evenRowColor = ColorUtils.lightenDarkenColor(
       TeamLogosModule.selectedBackdropColor,
@@ -190,7 +209,7 @@ export default class Standings extends Vue {
   }
 
   mounted() {
-    this.setTableRowStyle();
+    this.handleNewTeamSelected();
   }
 }
 </script>
