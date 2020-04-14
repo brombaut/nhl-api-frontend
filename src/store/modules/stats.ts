@@ -10,6 +10,8 @@ import store from "@/store";
 import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { PlayerStat } from "@/types/store-types/player-stat";
 import { playersApi } from "@/services/nhl-api-adapter/players-api";
+import { TeamStatSplit } from "@/types/store-types/team-stat-split";
+import { TeamEntity } from "@/types/store-types/team";
 
 export interface StatsState {
   teamsStats: Array<TeamStat>;
@@ -36,6 +38,40 @@ class Stats extends VuexModule implements StatsState {
       );
   }
 
+  public get teamStatSplitsForType(): (
+    teamId: number,
+    statType: string
+  ) => any {
+    return (teamId: number, statType: string) => {
+      const teamStats: Array<TeamStat> = this.statsForTeam(teamId);
+      const teamStatsForType = teamStats.find(
+        (teamStat: TeamStat) => teamStat.type === statType
+      );
+      if (!teamStatsForType) {
+        return {};
+      }
+      let statSplits: any;
+      teamStatsForType.splits.forEach((split: TeamStatSplit) => {
+        statSplits = { ...statSplits, ...split.stat };
+      });
+      return statSplits;
+    };
+  }
+
+  public get singleSeasonStatsForTeam(): (teamId: number) => TeamStatSplit {
+    return (teamId: number) => {
+      return this.teamStatSplitsForType(teamId, "statsSingleSeason");
+    };
+  }
+
+  public get regularSeasonRankingStatsForTeam(): (
+    teamId: number
+  ) => TeamStatSplit {
+    return (teamId: number) => {
+      return this.teamStatSplitsForType(teamId, "regularSeasonStatRankings");
+    };
+  }
+
   public get statsForPlayer() {
     return (playerId: number) =>
       this._playersStats.filter(
@@ -50,13 +86,21 @@ class Stats extends VuexModule implements StatsState {
   }
 
   @Action
-  public async loadStatsForPlayer(playerId: number): Promise<void> {
-    const playerStats: Array<PlayerStat> = await playersApi.getPlayerStats(
-      playerId,
-      "statsSingleSeason"
-    );
-    // TODO: Also load in regularSeasonStatRankings async
-    playerStats.map((playerStat: PlayerStat) => this.addPlayerStat(playerStat));
+  public loadStatsForPlayer(playerId: number): void {
+    playersApi
+      .getPlayerStats(playerId, "statsSingleSeason")
+      .then((playerStats: Array<PlayerStat>) => {
+        playerStats.map((playerStat: PlayerStat) =>
+          this.addPlayerStat(playerStat)
+        );
+      });
+    playersApi
+      .getPlayerStats(playerId, "regularSeasonStatRankings")
+      .then((playerStats: Array<PlayerStat>) => {
+        playerStats.map((playerStat: PlayerStat) =>
+          this.addPlayerStat(playerStat)
+        );
+      });
   }
 
   @Mutation
