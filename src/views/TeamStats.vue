@@ -1,6 +1,7 @@
 <template>
   <div id="team-stats">
-    <RadarChart :chartData="firstRadarChartData" />
+    <AreaChart :chartData="firstRadarChartData" />
+    <AreaChart :chartData="ppPkRadarChartData" />
   </div>
 </template>
 
@@ -10,12 +11,14 @@ import { Component } from "vue-property-decorator";
 import { StatsModule } from "../store/modules/stats";
 import { TeamsModule } from "../store/modules/teams";
 import RadarChart from "@/components/charts/RadarChart.vue";
+import AreaChart from "@/components/charts/AreaChart.vue";
 import { RadarChartDataBuilder } from "../types/data-types/radar-chart-data-builder";
 import { RadarChartData } from "../types/data-types/radar-chart-data";
 
 @Component({
   components: {
-    RadarChart
+    RadarChart,
+    AreaChart
   }
 })
 export default class TeamStats extends Vue {
@@ -35,9 +38,23 @@ export default class TeamStats extends Vue {
       "pts",
       "ptPctg",
       "goalsPerGame",
-      "goalsAgainstPerGame",
-      "evGGARatio"
+      "goalsAgainstPerGame"
     ];
+    return this.buildTeamStatsChart(attributes);
+  }
+
+  get ppPkRadarChartData() {
+    const attributes = [
+      "powerPlayPercentage",
+      "powerPlayGoals",
+      "powerPlayGoalsAgainst",
+      "powerPlayOpportunities",
+      "penaltyKillPercentage"
+    ];
+    return this.buildTeamStatsChart(attributes);
+  }
+
+  buildTeamStatsChart(attributes: Array<string>) {
     const stats: { singleSeason: object; ranked: object } = this.tempStatSplits;
     const chartBuilder = new RadarChartDataBuilder();
     chartBuilder
@@ -51,4 +68,10 @@ export default class TeamStats extends Vue {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+#team-stats {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+</style>

@@ -23,13 +23,37 @@ const statsLookupTable: any = {
     label: "Goals Per Game",
     abbreviation: "GPG"
   },
+  evGGARatio: {
+    label: "evGGARatio",
+    abbreviation: "evGGARatio"
+  },
   goalsAgainstPerGame: {
     label: "Goals Against Per Game",
     abbreviation: "GAA"
   },
-  evGGARatio: {
-    label: "evGGARatio",
-    abbreviation: "evGGARatio"
+  powerPlayPercentage: {
+    label: "Power Play Percentage",
+    abbreviation: "PP%"
+  },
+  powerPlayGoals: {
+    label: "Power Play Goals",
+    abbreviation: "PPG"
+  },
+  powerPlayGoalsAgainst: {
+    label: "Power Play Goals Against",
+    abbreviation: "PP GA"
+  },
+  powerPlayOpportunities: {
+    label: "Power Play Opportunities",
+    abbreviation: "PP OPP"
+  },
+  penaltyKillOpportunities: {
+    label: "Penalty Kill Opportunities",
+    abbreviation: "PK OPP"
+  },
+  penaltyKillPercentage: {
+    label: "Penalty Kill Percentage",
+    abbreviation: "PK %"
   }
 };
 

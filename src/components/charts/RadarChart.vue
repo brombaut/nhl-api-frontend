@@ -26,7 +26,16 @@ export default class RadarChart extends Vue {
       xaxis: this.xAxisOptions,
       yaxis: this.yAxisOptions,
       dataLabels: this.dataLabelsOptions,
-      tooltip: this.tooltipOptions
+      tooltip: this.tooltipOptions,
+      legend: {
+        show: true
+      },
+      grid: {
+        padding: {
+          left: 0,
+          right: 0
+        }
+      }
     };
     return options;
   }
@@ -34,7 +43,6 @@ export default class RadarChart extends Vue {
   get series() {
     const series = [
       {
-        name: "Series 1",
         data: this.chartData.yValues
       }
     ];
@@ -44,14 +52,20 @@ export default class RadarChart extends Vue {
   get chartOptions() {
     return {
       type: "radar",
-      foreColor: TeamLogosModule.selectedSecondaryColor
+      foreColor: TeamLogosModule.selectedSecondaryColor,
+      width: 300,
+      height: 300,
+      toolbar: {
+        show: false
+      },
+      animations: {
+        enabled: false
+      }
     };
   }
 
   get titleOptions() {
-    return {
-      text: "A Radar Chart"
-    };
+    return {};
   }
 
   get strokeOptions() {
@@ -102,8 +116,7 @@ export default class RadarChart extends Vue {
     return {
       show: false,
       tooltip: {
-        enabled: false,
-        offsetX: 0
+        enabled: false
       }
     };
   }
@@ -143,4 +156,8 @@ export default class RadarChart extends Vue {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.radar-chart {
+  // height: 400px;
+}
+</style>

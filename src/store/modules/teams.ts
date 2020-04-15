@@ -71,6 +71,7 @@ class Teams extends VuexModule implements TeamsState {
         this.selectTeamById(firstTeamId);
       }
     }
+    teams.map((team: Team) => StatsModule.loadStatsForTeam(team.id));
   }
 
   @Action
