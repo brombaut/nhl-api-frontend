@@ -1,13 +1,16 @@
-export class RadarChartData {
+export class ChartData {
+  private _title = "";
   private _xLabels: Array<string> = [];
   private _yValues: Array<number> = [];
   private _yLabels: Array<string> = [];
 
   constructor(
+    title: string,
     xLabels: Array<string>,
     yValues: Array<number>,
     yLabels?: Array<string>
   ) {
+    this._title = title;
     for (let i = 0; i < xLabels.length; ++i) {
       this._xLabels.push(xLabels[i]);
       this._yValues.push(yValues[i]);
@@ -15,6 +18,10 @@ export class RadarChartData {
         yLabels && yLabels.length > 0 ? yLabels[i] : yValues[i].toString()
       );
     }
+  }
+
+  get title() {
+    return this._title;
   }
 
   get xLabels() {

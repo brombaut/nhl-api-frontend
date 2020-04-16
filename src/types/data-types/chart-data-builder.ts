@@ -1,24 +1,30 @@
-import { RadarChartData } from "./radar-chart-data";
+import { ChartData } from "./chart-data";
 import statsLookupTable from "@/data/stats-lookup-table";
 
-export class RadarChartDataBuilder {
+export class ChartDataBuilder {
   private _attributes: Array<string> = [];
-  private _yValuesSource: any = {};
-  private _yLabelsSource: any = {};
+  private _yValuesSource: { [key: string]: string } = {};
+  private _yLabelsSource: { [key: string]: string } = {};
   private _useNhlRankingSource = false;
   private _useYLabels = false;
+  private _title = "";
 
   public setAttributes(attributes: Array<string>) {
     this._attributes = attributes;
     return this;
   }
 
-  public setYValuesSource(values: any) {
+  public setTitle(title: string) {
+    this._title = title;
+    return this;
+  }
+
+  public setYValuesSource(values: { [key: string]: string }) {
     this._yValuesSource = values;
     return this;
   }
 
-  public setYLabelsSource(labels: any) {
+  public setYLabelsSource(labels: { [key: string]: string }) {
     this._yLabelsSource = labels;
     this._useYLabels = true;
     return this;
@@ -36,7 +42,7 @@ export class RadarChartDataBuilder {
     if (this._useYLabels) {
       yLabels = this.buildYLabels();
     }
-    return new RadarChartData(xLabels, yValues, yLabels);
+    return new ChartData(this._title, xLabels, yValues, yLabels);
   }
 
   private buildXLabels(): Array<string> {

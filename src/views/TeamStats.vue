@@ -10,14 +10,12 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { StatsModule } from "../store/modules/stats";
 import { TeamsModule } from "../store/modules/teams";
-import RadarChart from "@/components/charts/RadarChart.vue";
 import AreaChart from "@/components/charts/AreaChart.vue";
-import { RadarChartDataBuilder } from "../types/data-types/radar-chart-data-builder";
-import { RadarChartData } from "../types/data-types/radar-chart-data";
+import { ChartDataBuilder } from "../types/data-types/chart-data-builder";
+import { ChartData } from "../types/data-types/chart-data";
 
 @Component({
   components: {
-    RadarChart,
     AreaChart
   }
 })
@@ -40,7 +38,8 @@ export default class TeamStats extends Vue {
       "goalsPerGame",
       "goalsAgainstPerGame"
     ];
-    return this.buildTeamStatsChart(attributes);
+    const title = "General";
+    return this.buildTeamStatsChart(title, attributes);
   }
 
   get ppPkRadarChartData() {
@@ -51,18 +50,20 @@ export default class TeamStats extends Vue {
       "powerPlayOpportunities",
       "penaltyKillPercentage"
     ];
-    return this.buildTeamStatsChart(attributes);
+    const title = "Power Play & Penalty Kill";
+    return this.buildTeamStatsChart(title, attributes);
   }
 
-  buildTeamStatsChart(attributes: Array<string>) {
+  buildTeamStatsChart(title: string, attributes: Array<string>) {
     const stats: { singleSeason: object; ranked: object } = this.tempStatSplits;
-    const chartBuilder = new RadarChartDataBuilder();
+    const chartBuilder = new ChartDataBuilder();
     chartBuilder
+      .setTitle(title)
       .setAttributes(attributes)
-      .setYValuesSource(stats.ranked)
-      .setYLabelsSource(stats.singleSeason)
+      .setYValuesSource(stats.ranked as { [key: string]: string })
+      .setYLabelsSource(stats.singleSeason as { [key: string]: string })
       .setUseNhlRanking(true);
-    const chartData: RadarChartData = chartBuilder.buildRadarChartData();
+    const chartData: ChartData = chartBuilder.buildRadarChartData();
     return chartData;
   }
 }
@@ -73,5 +74,6 @@ export default class TeamStats extends Vue {
   display: flex;
   flex-direction: column;
   overflow-x: auto;
+  padding: 8px 20px;
 }
 </style>

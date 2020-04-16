@@ -8,12 +8,12 @@
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
 import { TeamLogosModule } from "../../store/modules/team-logos";
-import { RadarChartData } from "../../types/data-types/radar-chart-data";
+import { ChartData } from "../../types/data-types/chart-data";
 
 @Component
 export default class AreaChart extends Vue {
   @Prop({ required: true })
-  private chartData!: RadarChartData;
+  private chartData!: ChartData;
 
   mounted() {
     this.showChartData();
@@ -27,6 +27,19 @@ export default class AreaChart extends Vue {
   get options() {
     const options = {
       labels: this.chartData.xLabels,
+      title: {
+        text: this.chartData.title,
+        align: "center",
+        margin: 0,
+        offsetX: 0,
+        offsetY: 8,
+        floating: false,
+        style: {
+          fontSize: "30px",
+          fontWeight: "bold",
+          color: TeamLogosModule.selectedPrimaryColor
+        }
+      },
       chart: {
         type: "area",
         height: 350,
@@ -52,6 +65,9 @@ export default class AreaChart extends Vue {
           }
         }
       },
+      stroke: {
+        curve: "straight"
+      },
       colors: [TeamLogosModule.selectedPrimaryColor],
       fill: {
         colors: [TeamLogosModule.selectedPrimaryColor],
@@ -66,7 +82,7 @@ export default class AreaChart extends Vue {
         title: {
           text: "NHL Rank",
           rotate: 90,
-          offsetX: 0,
+          offsetX: 10,
           offsetY: 0,
           style: {
             color: undefined,
@@ -77,20 +93,36 @@ export default class AreaChart extends Vue {
         },
         labels: {
           show: true,
-          align: "right",
+          align: "left",
           minWidth: 0,
-          maxWidth: 160,
+          maxWidth: 10,
           style: {
-            colors: [],
+            colors: Array(this.chartData.yLabels.length).fill(
+              TeamLogosModule.selectedSecondaryColor
+            ),
             fontWeight: 400,
             cssClass: "apexcharts-yaxis-label"
           },
-          offsetX: -12,
+          offsetX: 100,
           offsetY: 0,
           rotate: 0,
           formatter: (value: number) => {
             return 31 - value;
           }
+        }
+      },
+      xaxis: {
+        labels: {
+          show: true,
+          align: "right",
+          style: {
+            fontWeight: "bold",
+            fontSize: "16px",
+            cssClass: "apexcharts-yaxis-label"
+          }
+        },
+        tooltip: {
+          enabled: false
         }
       },
       dataLabels: {
@@ -107,7 +139,7 @@ export default class AreaChart extends Vue {
             TeamLogosModule.selectedBackdropColor
           )
         },
-        formatter: (value: any, options: any) => {
+        formatter: (value: number, options: { [key: string]: number }) => {
           const associatedLabel = this.chartData.yLabels[
             options.dataPointIndex
           ];
@@ -137,26 +169,27 @@ export default class AreaChart extends Vue {
         y: {
           formatter: undefined,
           title: {
-            formatter: (seriesName: any) => seriesName
+            formatter: (seriesName: string) => {
+              return seriesName;
+            }
           }
         }
-        // marker: {
-        //   show: false,
-        // },
       }
     };
     return options;
   }
 
   get series() {
-    const series = [{ data: this.chartData.yValues }];
+    const series = [
+      {
+        data: this.chartData.yValues,
+        name: "NHL Rank",
+        type: "column"
+      }
+    ];
     return series;
   }
 }
 </script>
 
-<style lang="scss">
-.radar-chart {
-  // height: 400px;
-}
-</style>
+<style lang="scss"></style>
