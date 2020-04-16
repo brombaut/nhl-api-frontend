@@ -1,7 +1,7 @@
 import { NhlApiTeamStatSplit } from "../nhl-api-types/nhl-api-team-stat-split";
 
 export class TeamStatSplit {
-  stat: {
+  private _stat: {
     wins: number | string;
     losses: number | string;
     ot: number | string;
@@ -33,10 +33,18 @@ export class TeamStatSplit {
     savePctg?: number;
     savePctRank?: string;
   };
-  teamId: number;
+  private _teamId: number;
 
   constructor(nhlApiTeamStatSplit: NhlApiTeamStatSplit) {
-    this.stat = { ...nhlApiTeamStatSplit.stat };
-    this.teamId = nhlApiTeamStatSplit.team.id;
+    this._stat = { ...nhlApiTeamStatSplit.stat };
+    this._teamId = nhlApiTeamStatSplit.team.id;
+  }
+
+  get teamId() {
+    return this._teamId;
+  }
+
+  get stat() {
+    return this._stat;
   }
 }
