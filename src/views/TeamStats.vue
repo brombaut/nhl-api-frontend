@@ -1,7 +1,9 @@
 <template>
   <div id="team-stats">
-    <AreaChart :chartData="firstRadarChartData" />
-    <AreaChart :chartData="ppPkRadarChartData" />
+    <AreaChart :chartData="generalAttributesChartData" />
+    <AreaChart :chartData="ppPkChartData" />
+    <AreaChart :chartData="winningStatsChartData" />
+    <AreaChart :chartData="shootingStatsChartData" />
   </div>
 </template>
 
@@ -28,7 +30,7 @@ export default class TeamStats extends Vue {
     };
   }
 
-  get firstRadarChartData() {
+  get generalAttributesChartData() {
     const attributes = [
       "wins",
       "losses",
@@ -42,7 +44,7 @@ export default class TeamStats extends Vue {
     return this.buildTeamStatsChart(title, attributes);
   }
 
-  get ppPkRadarChartData() {
+  get ppPkChartData() {
     const attributes = [
       "powerPlayPercentage",
       "powerPlayGoals",
@@ -50,7 +52,35 @@ export default class TeamStats extends Vue {
       "powerPlayOpportunities",
       "penaltyKillPercentage"
     ];
-    const title = "Power Play & Penalty Kill";
+    const title = "Special Teams";
+    return this.buildTeamStatsChart(title, attributes);
+  }
+
+  get winningStatsChartData() {
+    const attributes = [
+      "winScoreFirst",
+      "winOppScoreFirst",
+      "winLeadFirstPer",
+      "winLeadSecondPer",
+      "winOutshootOpp",
+      "winOutshotByOpp"
+    ];
+    const title = "Winning Stats";
+    return this.buildTeamStatsChart(title, attributes);
+  }
+
+  get shootingStatsChartData() {
+    const attributes = [
+      "shotsPerGame",
+      // "shootingPct",
+      "shotsAllowed",
+      // "savePct",
+      "faceOffsTaken",
+      "faceOffsWon",
+      "faceOffsLost",
+      "faceOffWinPercentage"
+    ];
+    const title = "Shooting & Faceoffs";
     return this.buildTeamStatsChart(title, attributes);
   }
 

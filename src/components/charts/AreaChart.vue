@@ -1,12 +1,12 @@
 <template>
   <div class="radar-chart">
-    <apexchart :options="options" :series="series" height="350" />
+    <apexchart :options="options" :series="series" height="380" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { TeamLogosModule } from "../../store/modules/team-logos";
 import { ChartData } from "../../types/data-types/chart-data";
 
@@ -14,15 +14,6 @@ import { ChartData } from "../../types/data-types/chart-data";
 export default class AreaChart extends Vue {
   @Prop({ required: true })
   private chartData!: ChartData;
-
-  mounted() {
-    this.showChartData();
-  }
-
-  @Watch("chartData")
-  showChartData() {
-    console.log(this.chartData);
-  }
 
   get options() {
     const options = {
@@ -103,7 +94,7 @@ export default class AreaChart extends Vue {
             fontWeight: 400,
             cssClass: "apexcharts-yaxis-label"
           },
-          offsetX: 100,
+          offsetX: 0,
           offsetY: 0,
           rotate: 0,
           formatter: (value: number) => {
@@ -117,7 +108,7 @@ export default class AreaChart extends Vue {
           align: "right",
           style: {
             fontWeight: "bold",
-            fontSize: "16px",
+            fontSize: "14px",
             cssClass: "apexcharts-yaxis-label"
           }
         },

@@ -48,7 +48,8 @@ export class ChartDataBuilder {
   private buildXLabels(): Array<string> {
     const xLabels: Array<string> = [];
     this._attributes.forEach((att: string) => {
-      xLabels.push(statsLookupTable[att].label);
+      const lookupAttribute = att;
+      xLabels.push(statsLookupTable[lookupAttribute].label);
     });
     return xLabels;
   }
@@ -56,10 +57,13 @@ export class ChartDataBuilder {
   private buildYValues(): Array<number> {
     const yValues: Array<number> = [];
     this._attributes.forEach((att: string) => {
+      const lookupAttribute = att;
       if (this._useNhlRankingSource) {
-        yValues.push(31 - Number.parseInt(this._yValuesSource[att]));
+        yValues.push(
+          31 - Number.parseInt(this._yValuesSource[lookupAttribute])
+        );
       } else {
-        yValues.push(Number.parseInt(this._yValuesSource[att]));
+        yValues.push(Number.parseInt(this._yValuesSource[lookupAttribute]));
       }
     });
     return yValues;
@@ -68,7 +72,11 @@ export class ChartDataBuilder {
   private buildYLabels(): Array<string> {
     const yLabels: Array<string> = [];
     this._attributes.forEach((att: string) => {
-      yLabels.push(this._yLabelsSource[att]?.toString());
+      let lookupAttribute = att;
+      if (!statsLookupTable[lookupAttribute]) {
+        lookupAttribute = `${lookupAttribute}Rank`;
+      }
+      yLabels.push(this._yLabelsSource[lookupAttribute]?.toString());
     });
     this._useYLabels = true;
     return yLabels;

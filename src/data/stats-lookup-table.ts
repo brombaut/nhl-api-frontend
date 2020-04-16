@@ -20,7 +20,7 @@ const statsLookupTable: any = {
     abbreviation: "PPT"
   },
   goalsPerGame: {
-    label: "Goals Per Game",
+    label: "Goals/Game",
     abbreviation: "GPG"
   },
   evGGARatio: {
@@ -28,7 +28,7 @@ const statsLookupTable: any = {
     abbreviation: "evGGARatio"
   },
   goalsAgainstPerGame: {
-    label: "Goals Against Per Game",
+    label: "Goals Against/Game",
     abbreviation: "GAA"
   },
   powerPlayPercentage: {
@@ -54,6 +54,63 @@ const statsLookupTable: any = {
   penaltyKillPercentage: {
     label: "Penalty Kill Percentage",
     abbreviation: "PK %"
+  },
+  winScoreFirst: {
+    label: "Scoring First",
+    abbreviation: "WSF"
+  },
+  winOppScoreFirst: {
+    label: "Opponent Scoring First",
+    abbreviation: "WOSF"
+  },
+  winLeadFirstPer: {
+    label: "Leading 1st Period",
+    abbreviation: "LFP"
+  },
+  winLeadSecondPer: {
+    label: "Leading 2nd Period",
+    abbreviation: ""
+  },
+  winOutshootOpp: {
+    label: "Outshooting Opponent",
+    abbreviation: ""
+  },
+  winOutshotByOpp: {
+    label: "Outshot by Opponent",
+    abbreviation: ""
+  },
+
+  shotsPerGame: {
+    label: "Shots/Game",
+    abbreviation: "S/G"
+  },
+  shootingPct: {
+    label: "Shooting %",
+    abbreviation: ""
+  },
+  shotsAllowed: {
+    label: "Shots Allowed",
+    abbreviation: ""
+  },
+  savePct: {
+    label: "Save %",
+    abbreviation: ""
+  },
+  faceOffsTaken: {
+    label: "Faceoffs Taken",
+    abbreviation: ""
+  },
+  faceOffsWon: {
+    label: "Faceoffs Won",
+    abbreviation: ""
+  },
+  faceOffsLost: {
+    label: "Faceoffs Lost",
+    abbreviation: ""
+  },
+  faceOffWinPercentage: {
+    label: "Faceoff %",
+    abbreviation: ""
   }
 };
 
