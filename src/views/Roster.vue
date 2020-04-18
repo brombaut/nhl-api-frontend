@@ -339,6 +339,7 @@ export default class Roster extends Vue {
   display: flex;
   flex-direction: row;
   overflow-y: auto;
+  overflow-x: hidden;
 
   .tables-container {
     flex: 1;

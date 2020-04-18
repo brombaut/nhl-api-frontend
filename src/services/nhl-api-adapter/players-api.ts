@@ -1,7 +1,7 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Api } from "./api";
 import { NhlApiResponsePeople } from "@/types/nhl-api-types/nhl-api-response-people";
-import { Player } from "@/types/store-types/player";
+import { Player, PlayerEntity } from "@/types/store-types/player";
 import { PlayerStat } from "@/types/store-types/player-stat";
 import { NhlApiResponseStats } from "@/types/nhl-api-types/nhl-api-response-stats";
 import {
@@ -21,7 +21,7 @@ class PlayersApi extends Api {
     return this.get<NhlApiResponsePeople>(`${API_PEOPLE}/${playerId}`)
       .then((peopleApiResponse: AxiosResponse<NhlApiResponsePeople>) => {
         const { people: nhlApiPeople } = peopleApiResponse.data;
-        const player: Player = new Player(nhlApiPeople[0]);
+        const player: Player = new PlayerEntity(nhlApiPeople[0]);
         return player;
       })
       .catch((error: AxiosError) => {

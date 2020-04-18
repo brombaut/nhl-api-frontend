@@ -6,7 +6,7 @@ import {
   getModule
 } from "vuex-module-decorators";
 import store from "@/store";
-import { Player } from "@/types/store-types/player";
+import { Player, NullPlayer } from "@/types/store-types/player";
 import { playersApi } from "@/services/nhl-api-adapter/players-api";
 import { StatsModule } from "./stats";
 
@@ -33,7 +33,7 @@ class Players extends VuexModule implements PlayersState {
       (player: Player) => player.id === this._selectedPlayerId
     );
     if (!player) {
-      throw `Selected Player not found`;
+      return new NullPlayer();
     }
     return player;
   }
@@ -42,7 +42,7 @@ class Players extends VuexModule implements PlayersState {
     return (id: number) => {
       const player = this._players.find((player: Player) => player.id === id);
       if (!player) {
-        throw `Player with ID=${id} not found`;
+        return new NullPlayer();
       }
       return player;
     };
