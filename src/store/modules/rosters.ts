@@ -30,7 +30,7 @@ class Rosters extends VuexModule implements RostersState {
         ?.rosterRelations || [];
   }
 
-  public get selectedTeamRoster(): Array<RosterRelation> {
+  public get selectedTeamRosterRelations(): Array<RosterRelation> {
     return (
       this._rosters.find(
         (roster: Roster) => roster.teamId === TeamsModule.selectedTeamId
@@ -49,6 +49,9 @@ class Rosters extends VuexModule implements RostersState {
 
   @Mutation
   private addRoster(roster: Roster): void {
+    this._rosters = this._rosters.filter(
+      (r: Roster) => r.teamId !== roster.teamId
+    );
     this._rosters.push(roster);
   }
 }
