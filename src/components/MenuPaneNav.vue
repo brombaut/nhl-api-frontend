@@ -68,9 +68,9 @@ export default class MenuPaneNav extends Vue {
 
   get navItemStyle() {
     return {
-      color: TeamLogosModule.selectedSecondaryColor,
-      "-webkit-text-stroke-width": "1px",
-      "-webkit-text-stroke-color": TeamLogosModule.selectedBackdropColor
+      color: TeamLogosModule.selectedSecondaryColor
+      // "-webkit-text-stroke-width": "1px",
+      // "-webkit-text-stroke-color": TeamLogosModule.selectedBackdropColor
     };
   }
 

@@ -1,6 +1,35 @@
 import { NhlApiPerson } from "../nhl-api-types/nhl-api-person";
 
-export class Player {
+export interface Player {
+  id: number;
+  fullName: string;
+  link: string;
+  firstName: string;
+  lastName: string;
+  primaryNumber: string;
+  birthDate: string;
+  currentAge: string;
+  birthCity: string;
+  birthStateProvince: string;
+  birthCountry: string;
+  nationality: string;
+  height: string;
+  weight: number;
+  active: boolean;
+  alternateCaptain: boolean;
+  captain: boolean;
+  rookie: boolean;
+  shootsCatches: string;
+  currentTeamId: number;
+  primaryPosition: {
+    code: string;
+    name: string;
+    type: string;
+    abbreviation: string;
+  };
+}
+
+export class PlayerEntity implements Player {
   id: number;
   fullName: string;
   link: string;
@@ -51,4 +80,38 @@ export class Player {
     this.currentTeamId = nhlApiPerson.currentTeam.id;
     this.primaryPosition = nhlApiPerson.primaryPosition;
   }
+}
+
+export class NullPlayer implements Player {
+  id = 0;
+  fullName = "";
+  link = "";
+  firstName = "";
+  lastName = "";
+  primaryNumber = "";
+  birthDate = "";
+  currentAge = "";
+  birthCity = "";
+  birthStateProvince = "";
+  birthCountry = "";
+  nationality = "";
+  height = "";
+  weight = 0;
+  active = false;
+  alternateCaptain = false;
+  captain = false;
+  rookie = false;
+  shootsCatches = "";
+  currentTeamId = 0;
+  primaryPosition: {
+    code: string;
+    name: string;
+    type: string;
+    abbreviation: string;
+  } = {
+    code: "",
+    name: "",
+    type: "",
+    abbreviation: ""
+  };
 }
