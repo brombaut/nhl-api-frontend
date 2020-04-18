@@ -8,31 +8,114 @@
             :style="tableHeaderCellStyle"
             colspan="11"
           >
-            {{ rosterTableHeader }}
+            Forwards
           </th>
         </tr>
         <tr>
-          <th :style="tableHeaderCellStyle">#</th>
           <th :style="tableHeaderCellStyle">Player</th>
+          <th :style="tableHeaderCellStyle">#</th>
           <th :style="tableHeaderCellStyle">Pos</th>
-          <th :style="tableHeaderCellStyle">DOB</th>
-          <th :style="tableHeaderCellStyle">Height</th>
-          <th :style="tableHeaderCellStyle">Weight</th>
+          <th :style="tableHeaderCellStyle">S/C</th>
+          <th :style="tableHeaderCellStyle">Ht</th>
+          <th :style="tableHeaderCellStyle">Wt</th>
+          <th :style="tableHeaderCellStyle">Born</th>
+          <th :style="tableHeaderCellStyle">Birthplace</th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="(rowData, rowIndex) in rosterRowsData"
+          v-for="(rowData, rowIndex) in rosterForwardRowsData"
           :key="rowData.personId"
           :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
         >
-          <td :style="tableDataCellBrightStyle">{{ rowData.jerseyNumber }}</td>
           <td :style="tableDataCellStyle">{{ buildPlayerName(rowData) }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.jerseyNumber }}</td>
           <td :style="tableDataCellStyle">{{ rowData.position.code }}</td>
-          <td :style="tableDataCellStyle">{{ rowData.birthDate }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.shootsCatches }}</td>
           <td :style="tableDataCellStyle">{{ rowData.height }}</td>
           <td :style="tableDataCellStyle">{{ rowData.weight }}</td>
-          <!-- <td :style="tableDataCellStyle">{{ rowData }}</td> -->
+          <td :style="tableDataCellStyle">{{ rowData.birthDate }}</td>
+          <td :style="tableDataCellStyle">{{ buildPlayerBirthPlaceString(rowData) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table :style="tableStyle">
+      <thead>
+        <tr>
+          <th
+            class="table-main-header"
+            :style="tableHeaderCellStyle"
+            colspan="11"
+          >
+            Defense
+          </th>
+        </tr>
+        <tr>
+          <th :style="tableHeaderCellStyle">Player</th>
+          <th :style="tableHeaderCellStyle">#</th>
+          <th :style="tableHeaderCellStyle">Pos</th>
+          <th :style="tableHeaderCellStyle">S/C</th>
+          <th :style="tableHeaderCellStyle">Ht</th>
+          <th :style="tableHeaderCellStyle">Wt</th>
+          <th :style="tableHeaderCellStyle">Born</th>
+          <th :style="tableHeaderCellStyle">Birthplace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(rowData, rowIndex) in rosterDefenseRowsData"
+          :key="rowData.personId"
+          :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
+        >
+          <td :style="tableDataCellStyle">{{ buildPlayerName(rowData) }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.jerseyNumber }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.position.code }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.shootsCatches }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.height }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.weight }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.birthDate }}</td>
+          <td :style="tableDataCellStyle">{{ buildPlayerBirthPlaceString(rowData) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table :style="tableStyle">
+      <thead>
+        <tr>
+          <th
+            class="table-main-header"
+            :style="tableHeaderCellStyle"
+            colspan="11"
+          >
+            Goalies
+          </th>
+        </tr>
+        <tr>
+          <th :style="tableHeaderCellStyle">Player</th>
+          <th :style="tableHeaderCellStyle">#</th>
+          <th :style="tableHeaderCellStyle">Pos</th>
+          <th :style="tableHeaderCellStyle">S/C</th>
+          <th :style="tableHeaderCellStyle">Ht</th>
+          <th :style="tableHeaderCellStyle">Wt</th>
+          <th :style="tableHeaderCellStyle">Born</th>
+          <th :style="tableHeaderCellStyle">Birthplace</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(rowData, rowIndex) in rosterGoalieRowsData"
+          :key="rowData.personId"
+          :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
+        >
+          <td :style="tableDataCellStyle">{{ buildPlayerName(rowData) }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.jerseyNumber }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.position.code }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.shootsCatches }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.height }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.weight }}</td>
+          <td :style="tableDataCellStyle">{{ rowData.birthDate }}</td>
+          <td :style="tableDataCellStyle">{{ buildPlayerBirthPlaceString(rowData) }}</td>
         </tr>
       </tbody>
     </table>
@@ -103,11 +186,50 @@ export default class Roster extends Vue {
     return RostersModule.selectedTeamRosterRelations;
   }
 
-  get rosterRowsData() {
+  get rosterForwardRowsData() {
     const rrs = this.teamRosterRelations;
     const rows: any[] = [];
     try {
       rrs.forEach((rr: RosterRelation) => {
+        if (!(rr.position.type === "Forward")) {
+          return;
+        }
+        const player = PlayersModule.playerById(rr.personId);
+        const rowObj = { ...rr, ...player };
+        rows.push(rowObj);
+      });
+    } catch (err) {
+      return rows;
+    }
+    return rows.sort(this.sortByPosition);
+  }
+
+  get rosterDefenseRowsData() {
+    const rrs = this.teamRosterRelations;
+    const rows: any[] = [];
+    try {
+      rrs.forEach((rr: RosterRelation) => {
+        if (!(rr.position.type === "Defenseman")) {
+          return;
+        }
+        const player = PlayersModule.playerById(rr.personId);
+        const rowObj = { ...rr, ...player };
+        rows.push(rowObj);
+      });
+    } catch (err) {
+      return rows;
+    }
+    return rows.sort(this.sortByPosition);
+  }
+
+  get rosterGoalieRowsData() {
+    const rrs = this.teamRosterRelations;
+    const rows: any[] = [];
+    try {
+      rrs.forEach((rr: RosterRelation) => {
+        if (!(rr.position.type === "Goalie")) {
+          return;
+        }
         const player = PlayersModule.playerById(rr.personId);
         const rowObj = { ...rr, ...player };
         rows.push(rowObj);
@@ -145,15 +267,27 @@ export default class Roster extends Vue {
     );
   }
 
-  buildPlayerName(player: any) {
-    const returnVal = player.fullName;
-    if (player.captain) {
+  buildPlayerName(rowData: any) {
+    const returnVal = rowData.fullName;
+    if (rowData.captain) {
       return `${returnVal} (C)`;
     }
-    if (player.alternateCaptain) {
+    if (rowData.alternateCaptain) {
       return `${returnVal} (A)`;
     }
     return returnVal;
+  }
+
+  buildPlayerBirthPlaceString(rowData: any) {
+    let returnString = '';
+    if (rowData.birthCity) {
+      returnString += `${rowData.birthCity}, `;
+    }
+    if (rowData.birthStateProvince) {
+      returnString += `${rowData.birthStateProvince}, `;
+    }
+    returnString += rowData.birthCountry;
+    return returnString;
   }
 
   sortByPosition(a: any, b: any) {
@@ -196,9 +330,7 @@ export default class Roster extends Vue {
     width: calc(100% - 56px);
     border-radius: 8px;
     text-align: center;
-
     width: 100%;
-    margin-top: 40px;
 
     thead {
       th {
@@ -218,6 +350,7 @@ export default class Roster extends Vue {
         td {
           padding: 8px;
           border: 1px solid white;
+          text-align: left;
 
           &.team-name-cell {
             padding: 0;
