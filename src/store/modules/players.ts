@@ -28,6 +28,16 @@ class Players extends VuexModule implements PlayersState {
     return this._selectedPlayerId;
   }
 
+  public get selectedPlayer() {
+    const player = this._players.find(
+      (player: Player) => player.id === this._selectedPlayerId
+    );
+    if (!player) {
+      throw `Selected Player not found`;
+    }
+    return player;
+  }
+
   public get playerById(): (id: number) => Player {
     return (id: number) => {
       const player = this._players.find((player: Player) => player.id === id);
@@ -48,6 +58,9 @@ class Players extends VuexModule implements PlayersState {
   @Action
   public selectPlayerById(playerId: number): void {
     this.setSelectedPlayerId(playerId);
+    if (playerId === 0) {
+      return;
+    }
     if (StatsModule.statsForPlayer(playerId).length === 0) {
       StatsModule.loadStatsForPlayer(playerId);
     }
