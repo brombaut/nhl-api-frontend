@@ -50,7 +50,7 @@
         <div>
           <span class="gen-info-label" :style="genInfoLabelStyle"
             >Birth Place: </span
-          >{{ buildPlayerBirthPlaceString(selectedPlayer) }}
+          >{{ selectedPlayer.fullBirthPlace }}
         </div>
       </h4>
     </div>
@@ -240,7 +240,7 @@ export default class PlayerDetailsPanel extends Vue {
       font-size: 2.3rem;
       font-weight: 800;
     }
-
+    // TODO: Remove
     .gen-info {
       display: flex;
       width: 100%;

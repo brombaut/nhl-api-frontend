@@ -27,6 +27,9 @@ export interface Player {
     type: string;
     abbreviation: string;
   };
+
+  fullBirthPlace: string;
+  playerNameWithCaptainSuffix: string;
 }
 
 export class PlayerEntity implements Player {
@@ -56,6 +59,8 @@ export class PlayerEntity implements Player {
     type: string;
     abbreviation: string;
   };
+  fullBirthPlace: string;
+  playerNameWithCaptainSuffix: string;
 
   constructor(nhlApiPerson: NhlApiPerson) {
     this.id = nhlApiPerson.id;
@@ -79,6 +84,31 @@ export class PlayerEntity implements Player {
     this.shootsCatches = nhlApiPerson.shootsCatches;
     this.currentTeamId = nhlApiPerson.currentTeam.id;
     this.primaryPosition = nhlApiPerson.primaryPosition;
+    this.fullBirthPlace = this.buildFullBirthPlace();
+    this.playerNameWithCaptainSuffix = this.buildPlayerNameWithCaptainSuffix();
+  }
+
+  buildFullBirthPlace(): string {
+    let returnString = "";
+    if (this.birthCity) {
+      returnString += `${this.birthCity}, `;
+    }
+    if (this.birthStateProvince) {
+      returnString += `${this.birthStateProvince}, `;
+    }
+    returnString += this.birthCountry;
+    return returnString;
+  }
+
+  buildPlayerNameWithCaptainSuffix(): string {
+    const returnVal = this.fullName;
+    if (this.captain) {
+      return `${returnVal} (C)`;
+    }
+    if (this.alternateCaptain) {
+      return `${returnVal} (A)`;
+    }
+    return returnVal;
   }
 }
 
@@ -114,4 +144,6 @@ export class NullPlayer implements Player {
     type: "",
     abbreviation: ""
   };
+  fullBirthPlace = "";
+  playerNameWithCaptainSuffix = "";
 }
