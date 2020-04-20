@@ -1,29 +1,21 @@
 <template>
   <h4 class="player-details-info-row">
-    <div>
-      <span class="label" :style="genInfoLabelStyle">
-        Age:
-      </span>
-      {{ selectedPlayer.currentAge }}
-    </div>
-    <span class="label" :style="genInfoLabelStyle">
-      |
+    <span
+      v-for="(pair, index) in pairs"
+      :key="pair.label"
+      class="value-and-divider"
+    >
+      <div class="label-value-container">
+        <span class="label" :style="genInfoLabelStyle">{{ pair.label }}:</span>
+        {{ pair.value }}
+      </div>
+      <span
+        v-if="index < pairs.length - 1"
+        class="label"
+        :style="genInfoLabelStyle"
+        >|</span
+      >
     </span>
-    <div>
-      <span class="label" :style="genInfoLabelStyle">
-        Height
-      </span>
-      {{ selectedPlayer.height }}
-    </div>
-    <span class="label" :style="genInfoLabelStyle">
-      |
-    </span>
-    <div>
-      <span class="label" :style="genInfoLabelStyle">
-        Weight:
-      </span>
-      {{ selectedPlayer.weight }}
-    </div>
   </h4>
 </template>
 
@@ -52,6 +44,12 @@ export default class PlayerDetailsInfoRow extends Vue {
   width: 100%;
   padding: 4px 0px;
   justify-content: space-around;
+
+  .value-and-divider {
+    display: flex;
+    justify-content: space-around;
+    flex: 1;
+  }
 
   .gen-info-label {
     color: #9c9c9c;

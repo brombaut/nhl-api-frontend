@@ -8,51 +8,10 @@
     </header>
     <div class="details-panel" v-show="selectedPlayerId">
       <h4 class="name">{{ firstName }}<br />{{ lastName }} {{ nameSuffix }}</h4>
-      <h4 class="gen-info">
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle">Age: </span>
-          {{ selectedPlayer.currentAge }}
-        </div>
-        <span class="gen-info-label" :style="genInfoLabelStyle">|</span>
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle">Height: </span
-          >{{ selectedPlayer.height }}
-        </div>
-        <span class="gen-info-label" :style="genInfoLabelStyle">|</span>
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle"
-            >Weight:
-          </span>
-          {{ selectedPlayer.weight }}
-        </div>
-      </h4>
-      <h4 class="gen-info">
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle"
-            >Position: </span
-          >{{ selectedPlayer.primaryPosition.name }}
-        </div>
-        <span class="gen-info-label" :style="genInfoLabelStyle">|</span>
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle"
-            >Shoots/Catches: </span
-          >{{ selectedPlayer.shootsCatches }}
-        </div>
-      </h4>
-      <h4 class="gen-info">
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle"
-            >Birth Date: </span
-          >{{ selectedPlayer.birthDate }}
-        </div>
-      </h4>
-      <h4 class="gen-info">
-        <div>
-          <span class="gen-info-label" :style="genInfoLabelStyle"
-            >Birth Place: </span
-          >{{ selectedPlayer.fullBirthPlace }}
-        </div>
-      </h4>
+      <PlayerDetailsInfoRow :pairs="rowInfo1" />
+      <PlayerDetailsInfoRow :pairs="rowInfo2" />
+      <PlayerDetailsInfoRow :pairs="rowInfo3" />
+      <PlayerDetailsInfoRow :pairs="rowInfo4" />
     </div>
   </div>
 </template>
@@ -63,9 +22,14 @@ import { Component, Watch } from "vue-property-decorator";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import { PlayersModule } from "../store/modules/players";
 import { TeamsModule } from "../store/modules/teams";
-import { Player } from "../types/store-types/player";
+import PlayerDetailsInfoRow from "@/components/PlayerDetailsInfoRow.vue";
+import { LabelValuePair } from "../types/data-types/label-value-pair";
 
-@Component
+@Component({
+  components: {
+    PlayerDetailsInfoRow
+  }
+})
 export default class PlayerDetailsPanel extends Vue {
   get panelStyle() {
     return {
@@ -92,12 +56,6 @@ export default class PlayerDetailsPanel extends Vue {
     };
   }
 
-  get genInfoLabelStyle() {
-    return {
-      color: TeamLogosModule.selectedBackdropColor
-    };
-  }
-
   get selectedPlayerId() {
     return PlayersModule.selectedPlayerId;
   }
@@ -108,6 +66,55 @@ export default class PlayerDetailsPanel extends Vue {
 
   get selectedTeamId() {
     return TeamsModule.selectedTeamId;
+  }
+
+  get firstName() {
+    return this.selectedPlayer.firstName;
+  }
+
+  get lastName() {
+    return this.selectedPlayer.lastName;
+  }
+
+  get nameSuffix() {
+    if (this.selectedPlayer.captain) {
+      return "(C)";
+    }
+    if (this.selectedPlayer.alternateCaptain) {
+      return "(A)";
+    }
+    return "";
+  }
+
+  get rowInfo1(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Age", this.selectedPlayer.currentAge),
+      new LabelValuePair("Height", this.selectedPlayer.height),
+      new LabelValuePair("Weight", this.selectedPlayer.weight.toString())
+    ];
+    return labelValues;
+  }
+
+  get rowInfo2(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Position", this.selectedPlayer.primaryPosition.name),
+      new LabelValuePair("Shoots/Catches", this.selectedPlayer.shootsCatches)
+    ];
+    return labelValues;
+  }
+
+  get rowInfo3(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Birth Place", this.selectedPlayer.fullBirthPlace)
+    ];
+    return labelValues;
+  }
+
+  get rowInfo4(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Birth Date", this.selectedPlayer.birthDate)
+    ];
+    return labelValues;
   }
 
   @Watch("selectedPlayerId")
@@ -133,36 +140,6 @@ export default class PlayerDetailsPanel extends Vue {
   closePanel() {
     const el: HTMLDivElement = this.$el as HTMLDivElement;
     el.style.width = "0px";
-  }
-
-  get firstName() {
-    return this.selectedPlayer.firstName;
-  }
-
-  get lastName() {
-    return this.selectedPlayer.lastName;
-  }
-
-  get nameSuffix() {
-    if (this.selectedPlayer.captain) {
-      return "(C)";
-    }
-    if (this.selectedPlayer.alternateCaptain) {
-      return "(A)";
-    }
-    return "";
-  }
-
-  buildPlayerBirthPlaceString(player: Player) {
-    let returnString = "";
-    if (player.birthCity) {
-      returnString += `${player.birthCity}, `;
-    }
-    if (player.birthStateProvince) {
-      returnString += `${player.birthStateProvince}, `;
-    }
-    returnString += player.birthCountry;
-    return returnString;
   }
 
   mounted() {
@@ -239,18 +216,6 @@ export default class PlayerDetailsPanel extends Vue {
       text-transform: uppercase;
       font-size: 2.3rem;
       font-weight: 800;
-    }
-    // TODO: Remove
-    .gen-info {
-      display: flex;
-      width: 100%;
-      padding: 4px 0px;
-      justify-content: space-around;
-
-      .gen-info-label {
-        color: #9c9c9c;
-        // filter: brightness(50%);
-      }
     }
   }
 }

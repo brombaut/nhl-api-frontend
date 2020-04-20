@@ -21,6 +21,8 @@ import { RosterTableData } from "../types/data-types/roster-table-data";
 import PlayerDetailsPanel from "@/components/PlayerDetailsPanel.vue";
 import RosterTable from "@/components/RosterTable.vue";
 
+type RosterRowData = RosterRelation & Player;
+
 @Component({
   components: {
     PlayerDetailsPanel,
@@ -41,21 +43,21 @@ export default class Roster extends Vue {
 
   get forwardsRosterTableData() {
     const title = "Forwards";
-    const forwards: Array<RosterRelation & Player> = this.rosterForwardRowsData;
+    const forwards: Array<RosterRowData> = this.rosterForwardRowsData;
     const rows: TableDataRow[] = forwards.map(this.buildTableRowValues);
     return new RosterTableData(title, this.rosterTableColumns, rows);
   }
 
   get defenseRosterTableData() {
     const title = "Defense";
-    const defense: Array<RosterRelation & Player> = this.rosterDefenseRowsData;
+    const defense: Array<RosterRowData> = this.rosterDefenseRowsData;
     const rows: TableDataRow[] = defense.map(this.buildTableRowValues);
     return new RosterTableData(title, this.rosterTableColumns, rows);
   }
 
   get goaliesRosterTableData() {
     const title = "Goalies";
-    const goalies: Array<RosterRelation & Player> = this.rosterGoalieRowsData;
+    const goalies: Array<RosterRowData> = this.rosterGoalieRowsData;
     const rows: TableDataRow[] = goalies.map(this.buildTableRowValues);
     return new RosterTableData(title, this.rosterTableColumns, rows);
   }
@@ -72,9 +74,9 @@ export default class Roster extends Vue {
     return this.rosterPlayersByType("Goalie");
   }
 
-  rosterPlayersByType(type: string): Array<RosterRelation & Player> {
+  rosterPlayersByType(type: string): Array<RosterRowData> {
     const rrs = RostersModule.selectedTeamRosterRelations;
-    const rows: Array<RosterRelation & Player> = [];
+    const rows: Array<RosterRowData> = [];
     try {
       rrs.forEach((rr: RosterRelation) => {
         if (rr.position.type === type) {
@@ -87,15 +89,13 @@ export default class Roster extends Vue {
     return rows.sort(this.sortByLastName);
   }
 
-  buildRosterRelationAndPlayerIntersection(
-    rr: RosterRelation
-  ): RosterRelation & Player {
+  buildRosterRelationAndPlayerIntersection(rr: RosterRelation): RosterRowData {
     const player = PlayersModule.playerById(rr.personId);
-    const rowObj: RosterRelation & Player = { ...rr, ...player };
+    const rowObj: RosterRowData = { ...rr, ...player };
     return rowObj;
   }
 
-  sortByLastName(a: RosterRelation & Player, b: RosterRelation & Player) {
+  sortByLastName(a: RosterRowData, b: RosterRowData) {
     const aName = a.lastName;
     const bName = b.lastName;
     if (aName < bName) {
@@ -104,7 +104,7 @@ export default class Roster extends Vue {
     return 1;
   }
 
-  buildTableRowValues(player: RosterRelation & Player): TableDataRow {
+  buildTableRowValues(player: RosterRowData): TableDataRow {
     const values: string[] = [
       player.playerNameWithCaptainSuffix,
       player.jerseyNumber,
