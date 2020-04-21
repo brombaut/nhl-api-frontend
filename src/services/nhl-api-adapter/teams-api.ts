@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { Api } from "./api";
+import { Api } from "../api";
 import { NhlApiResponseTeams } from "@/types/nhl-api-types/nhl-api-response-teams";
 import { NhlApiTeam } from "@/types/nhl-api-types/nhl-api-team";
 import { Team, TeamEntity } from "@/types/store-types/team";

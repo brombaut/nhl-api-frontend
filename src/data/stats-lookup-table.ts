@@ -1,4 +1,13 @@
-const statsLookupTable: any = {
+interface Map<TValue> {
+  [id: string]: TValue;
+}
+
+interface StatAbbrv {
+  label: string;
+  abbreviation: string;
+}
+
+const statsLookupTable: Map<StatAbbrv> = {
   wins: {
     label: "Wins",
     abbreviation: "W"
