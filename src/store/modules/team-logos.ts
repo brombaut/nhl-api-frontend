@@ -67,6 +67,14 @@ class TeamLogos extends VuexModule implements TeamLogosState {
     }
     return this.selectedTeamLogo.fileName;
   }
+
+  public get logoHash(): string {
+    return (
+      this.selectedTeamLogo.primaryColor +
+      this.selectedTeamLogo.secondaryColor +
+      this.selectedTeamLogo.backdropColor
+    );
+  }
 }
 
 export const TeamLogosModule = getModule(TeamLogos);
