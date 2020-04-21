@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { Api } from "./api";
+import { Api } from "../api";
 import { Conference } from "@/types/store-types/conference";
 import { NhlApiResponseConferences } from "@/types/nhl-api-types/nhl-api-response-conferences";
 import { NhlApiConference } from "@/types/nhl-api-types/nhl-api-conference";

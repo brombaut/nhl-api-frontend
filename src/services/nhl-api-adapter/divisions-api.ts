@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { Api } from "./api";
+import { Api } from "../api";
 import { Division } from "@/types/store-types/division";
 import { NhlApiResponseDivisionss } from "@/types/nhl-api-types/nhl-api-response-divisions";
 import { NhlApiDivision } from "@/types/nhl-api-types/nhl-api-division";

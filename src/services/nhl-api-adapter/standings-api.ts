@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { Api } from "./api";
+import { Api } from "../api";
 import { NhlApiResponseStandingsTypes } from "@/types/nhl-api-types/nhl-api-response-standings-types";
 import { NhlApiResponseStandings } from "@/types/nhl-api-types/nhl-api-response-standings";
 import { StandingsType } from "@/types/store-types/standings-type";
