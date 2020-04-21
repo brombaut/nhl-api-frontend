@@ -1,18 +1,18 @@
 <template>
-  <table class="roster-table" :style="tableStyle">
+  <table class="standings-table" :style="tableStyle">
     <thead>
       <tr>
         <th
           class="table-main-header"
           :style="tableHeaderCellStyle"
-          :colspan="rosterTableData.columns.length"
+          colspan="11"
         >
-          {{ rosterTableData.title }}
+          {{ standingsTableData.title }}
         </th>
       </tr>
       <tr>
         <th
-          v-for="column in rosterTableData.columns"
+          v-for="column in standingsTableData.columns"
           :key="column"
           :style="tableHeaderCellStyle"
         >
@@ -22,17 +22,28 @@
     </thead>
     <tbody>
       <tr
-        v-for="(rowData, rowIndex) in rosterTableData.rows"
+        v-for="(rowData, rowIndex) in standingsTableData.rows"
         :key="rowData.id"
         :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
-        @click="rowData.clickCallBack()"
       >
         <td
           v-for="(rowItem, index) in rowData.values"
           :key="index"
-          :style="tableDataCellStyle"
+          :style="
+            standingsTableData.highlightIndexes.includes(index)
+              ? tableDataCellBrightStyle
+              : tableDataCellStyle
+          "
         >
-          {{ rowItem }}
+          <div
+            v-if="index === standingsTableData.teamNameIndex"
+            class="team-name-container"
+            :style="teamDataCellStyles(rowData.entityId)"
+          >
+            <img :src="imageUrlByTeamId(rowData.entityId)" />
+            <span>{{ rowItem }}</span>
+          </div>
+          <span v-else>{{ rowItem }}</span>
         </td>
       </tr>
     </tbody>
@@ -42,17 +53,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { RosterTableData } from "@/types/data-types/roster-table-data";
+import { StandingsTableData } from "@/types/data-types/standings-table-data";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import ColorUtils from "@/utils/color-utils";
+import { TeamsModule } from "../store/modules/teams";
 
 @Component
-export default class RosterTable extends Vue {
+export default class StandingsTable extends Vue {
   evenRowColor = "";
   oddRowColor = "";
 
   @Prop({ required: true })
-  rosterTableData!: RosterTableData;
+  standingsTableData!: StandingsTableData;
 
   get tableStyle() {
     return {
@@ -91,7 +103,20 @@ export default class RosterTable extends Vue {
     };
   }
 
-  @Watch("rosterTableData")
+  teamDataCellStyles(teamId: number) {
+    if (TeamsModule.selectedTeamId === teamId) {
+      return this.tableDataCellBrightStyle;
+    }
+    return this.tableDataCellStyle;
+  }
+
+  imageUrlByTeamId(teamId: number) {
+    const team = TeamsModule.teamById(teamId);
+    const teamLogo = TeamLogosModule.teamLogoByAbbreviation(team.abbreviation);
+    return require(`../assets/team-logos/${teamLogo.fileName}`);
+  }
+
+  @Watch("standingsTableData")
   setTableRowStyle() {
     this.evenRowColor = ColorUtils.lightenDarkenColor(
       TeamLogosModule.selectedBackdropColor,
@@ -109,15 +134,15 @@ export default class RosterTable extends Vue {
 }
 </script>
 
-<style lang="scss">
-.roster-table {
+<style lang="scss" scoped>
+.standings-table {
   border-collapse: collapse;
   border-spacing: 0;
   margin: 28px;
   font-weight: 700;
+  width: calc(100% - 56px);
   border-radius: 8px;
   text-align: center;
-  width: 100%;
 
   thead {
     th {
@@ -134,14 +159,9 @@ export default class RosterTable extends Vue {
 
   tbody {
     tr {
-      &:hover {
-        cursor: pointer;
-        filter: brightness(85%);
-      }
       td {
-        padding: 8px;
+        // padding: 8px;
         border: 1px solid white;
-        text-align: left;
 
         &.team-name-cell {
           padding: 0;

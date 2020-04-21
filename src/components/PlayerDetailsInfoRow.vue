@@ -1,6 +1,6 @@
 <template>
   <h4 class="player-details-info-row">
-    <span
+    <div
       v-for="(pair, index) in pairs"
       :key="pair.label"
       class="value-and-divider"
@@ -9,13 +9,14 @@
         <span class="label" :style="genInfoLabelStyle">{{ pair.label }}:</span>
         {{ pair.value }}
       </div>
-      <span
+      <div
         v-if="index < pairs.length - 1"
         class="label"
         :style="genInfoLabelStyle"
-        >|</span
       >
-    </span>
+        |
+      </div>
+    </div>
   </h4>
 </template>
 

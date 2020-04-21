@@ -2,6 +2,7 @@ import { NhlApiStandings } from "../nhl-api-types/nhl-api-standings";
 import { StandingsTeamRecord } from "./stadings-team-record";
 
 export class StandingsRecord {
+  id: string;
   standingsType: string;
   league: {
     id: number;
@@ -24,5 +25,9 @@ export class StandingsRecord {
     this.teamRecords = nhlApiStandings.teamRecords.map(
       teamRec => new StandingsTeamRecord(teamRec)
     );
+    this.id = this.teamRecords
+      .map((tr: StandingsTeamRecord) => tr.teamId)
+      .join()
+      .replace(/\s/g, "");
   }
 }

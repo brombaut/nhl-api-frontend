@@ -2,72 +2,18 @@
   <div id="standings">
     <StandingsTypeSelector />
     <div class="tables-container">
-      <table
-        v-for="(standings, index) in standingsTableData"
-        :key="index"
-        :style="tableStyle"
-      >
-        <thead>
-          <tr>
-            <th
-              class="table-main-header"
-              :style="tableHeaderCellStyle"
-              colspan="11"
-            >
-              {{ getTableHeader(standings) }}
-            </th>
-          </tr>
-          <tr>
-            <th :style="tableHeaderCellStyle">#</th>
-            <th :style="tableHeaderCellStyle">Team</th>
-            <th :style="tableHeaderCellStyle">GP</th>
-            <th :style="tableHeaderCellStyle">W</th>
-            <th :style="tableHeaderCellStyle">L</th>
-            <th :style="tableHeaderCellStyle">OT</th>
-            <th :style="tableHeaderCellStyle">PTS</th>
-            <th :style="tableHeaderCellStyle">RW</th>
-            <th :style="tableHeaderCellStyle">ROW</th>
-            <th :style="tableHeaderCellStyle">GF</th>
-            <th :style="tableHeaderCellStyle">GA</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(record, rowIndex) in standings.teamRecords"
-            :key="record.teamId"
-            :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
-          >
-            <td :style="tableDataCellBrightStyle">{{ rowIndex + 1 }}</td>
-            <td :style="tableDataCellStyle" class="team-name-cell">
-              <div
-                class="team-name-container"
-                :style="teamDataCellStyles(record.teamId)"
-              >
-                <img :src="imageUrlByTeamId(record.teamId)" />
-                <span>{{ teamNameById(record.teamId) }}</span>
-              </div>
-            </td>
-            <td :style="tableDataCellStyle">{{ record.gamesPlayed }}</td>
-            <td :style="tableDataCellStyle">{{ record.leagueRecord.wins }}</td>
-            <td :style="tableDataCellStyle">
-              {{ record.leagueRecord.losses }}
-            </td>
-            <td :style="tableDataCellStyle">{{ record.leagueRecord.ot }}</td>
-            <td :style="tableDataCellStyle">{{ record.points }}</td>
-            <td :style="tableDataCellStyle">{{ record.regulationWins }}</td>
-            <td :style="tableDataCellStyle">{{ record.row }}</td>
-            <td :style="tableDataCellStyle">{{ record.goalsScored }}</td>
-            <td :style="tableDataCellStyle">{{ record.goalsAgainst }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <StandingsTable
+        v-for="tableData in standingsTableData"
+        :key="tableData.id"
+        :standingsTableData="tableData"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Watch } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import { StandingsModule } from "../store/modules/standings";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import { TeamsModule } from "../store/modules/teams";
@@ -76,17 +22,109 @@ import { DivisionsModule } from "../store/modules/divisions";
 import StandingsTypeSelector from "@/components/StandingsTypeSelector.vue";
 import { ConferencesModule } from "../store/modules/conferences";
 import { StandingsTeamRecord } from "../types/store-types/stadings-team-record";
-import ColorUtils from "@/utils/color-utils";
+import StandingsTable from "@/components/StandingsTable.vue";
+import { StandingsTableData } from "../types/data-types/standings-table-data";
+import { TableDataRow } from "../types/data-types/table-data-row";
 
 @Component({
   components: {
-    StandingsTypeSelector
+    StandingsTypeSelector,
+    StandingsTable
   }
 })
 export default class Standings extends Vue {
-  evenRowColor = "";
-  oddRowColor = "";
-  standingsTableData: Array<StandingsRecord> = [];
+  readonly standingsTableColumns: string[] = [
+    "#",
+    "Team",
+    "GP",
+    "W",
+    "L",
+    "OT",
+    "PTS",
+    "RW",
+    "ROW",
+    "GF",
+    "GA"
+  ];
+  readonly teamNameColumnInde = 1;
+  readonly baseHighlightIndexes: number[] = [0];
+
+  get selectedStandings() {
+    return StandingsModule.selectedStandings;
+  }
+
+  get standingsTableData(): StandingsTableData[] {
+    const sortedRecords: Array<StandingsRecord> = this.sortStandingsRecords(
+      this.selectedStandings
+    );
+    const standingsTables: StandingsTableData[] = sortedRecords.map(
+      this.buildStandingsTableData
+    );
+    return standingsTables;
+  }
+
+  sortStandingsRecords(standingsRecords: StandingsRecord[]) {
+    const copiedRecords = [...standingsRecords];
+    const sortedRecords: Array<StandingsRecord> = [];
+    const selectedTeamId = TeamsModule.selectedTeamId;
+    for (let i = 0; i < copiedRecords.length; ++i) {
+      const recordContainsTeamId: boolean = copiedRecords[i].teamRecords.some(
+        (teamRec: StandingsTeamRecord) => {
+          return teamRec.teamId === selectedTeamId;
+        }
+      );
+      if (recordContainsTeamId) {
+        sortedRecords.push(copiedRecords[i]);
+        copiedRecords.splice(i, 1);
+        break;
+      }
+    }
+    sortedRecords.push(...copiedRecords);
+    return sortedRecords;
+  }
+
+  buildStandingsTableData(
+    standingsRecord: StandingsRecord
+  ): StandingsTableData {
+    const title = this.getTableHeader(standingsRecord);
+    const teamRecords: StandingsTeamRecord[] = standingsRecord.teamRecords;
+    const rows: TableDataRow[] = teamRecords.map(this.buildTableRowValues);
+    return new StandingsTableData(
+      title,
+      this.standingsTableColumns,
+      rows,
+      this.teamNameColumnInde,
+      this.baseHighlightIndexes
+    );
+  }
+
+  buildTableRowValues(
+    teamRecord: StandingsTeamRecord,
+    index: number
+  ): TableDataRow {
+    const values: string[] = [
+      (index + 1).toString(),
+      this.teamNameById(teamRecord.teamId),
+      teamRecord.gamesPlayed.toString(),
+      teamRecord.leagueRecord.wins.toString(),
+      teamRecord.leagueRecord.losses.toString(),
+      teamRecord.leagueRecord.ot.toString(),
+      teamRecord.points.toString(),
+      teamRecord.regulationWins.toString(),
+      teamRecord.row.toString(),
+      teamRecord.goalsScored.toString(),
+      teamRecord.goalsAgainst.toString()
+    ];
+    const clickCallback = () => {
+      return;
+    };
+    const rowId = index.toString() + TeamLogosModule.logoHash;
+    return new TableDataRow(values, clickCallback, teamRecord.teamId, rowId);
+  }
+
+  teamNameById(teamId: number): string {
+    return TeamsModule.teamById(teamId).shortName;
+  }
 
   getTableHeader(standingsObj: StandingsRecord): string {
     if (standingsObj.divisionId) {
@@ -100,116 +138,8 @@ export default class Standings extends Vue {
     return standingsObj.league.name;
   }
 
-  get selectedStandings() {
-    return StandingsModule.selectedStandings;
-  }
-
-  setStandingTableData() {
-    const sortedRecords: Array<StandingsRecord> = [];
-    const standingsRecords = [...this.selectedStandings];
-    const selectedTeamId = TeamsModule.selectedTeamId;
-    for (let i = 0; i < standingsRecords.length; ++i) {
-      const recordContainsTeamId: boolean = standingsRecords[
-        i
-      ].teamRecords.some((teamRec: StandingsTeamRecord) => {
-        return teamRec.teamId === selectedTeamId;
-      });
-      if (recordContainsTeamId) {
-        sortedRecords.push(standingsRecords[i]);
-        standingsRecords.splice(i, 1);
-        break;
-      }
-    }
-    sortedRecords.push(...standingsRecords);
-    this.standingsTableData = [...sortedRecords];
-  }
-
-  get tableStyle() {
-    return {
-      color: TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
-  get tableHeaderCellStyle() {
-    return {
-      "background-color": TeamLogosModule.selectedPrimaryColor,
-      "border-color": TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
-  get tableDataCellStyle() {
-    return {
-      "border-color": TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
-  get tableDataCellBrightStyle() {
-    return {
-      "background-color": TeamLogosModule.selectedPrimaryColor,
-      "border-color": TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
-  get evenTableRowStyle() {
-    return {
-      "background-color": this.evenRowColor
-    };
-  }
-  get oddTableRowStyle() {
-    return {
-      "background-color": this.oddRowColor
-    };
-  }
-
-  teamDataCellStyles(teamId: number) {
-    if (TeamsModule.selectedTeamId === teamId) {
-      return this.tableDataCellBrightStyle;
-    }
-    return this.tableDataCellStyle;
-  }
-
-  teamNameById(teamId: number): string {
-    return TeamsModule.teamById(teamId).shortName;
-  }
-
-  imageUrlByTeamId(teamId: number) {
-    const team = TeamsModule.teamById(teamId);
-    const teamLogo = TeamLogosModule.teamLogoByAbbreviation(team.abbreviation);
-    return require(`../assets/team-logos/${teamLogo.fileName}`);
-  }
-
   get selectedTeamId() {
     return TeamsModule.selectedTeamId;
-  }
-
-  @Watch("selectedTeamId")
-  handleNewTeamSelected() {
-    this.standingsTableData.length = 0;
-    this.$nextTick().then(() => {
-      this.setStandingTableData();
-      this.setTableRowStyle();
-    });
-  }
-
-  @Watch("selectedStandings")
-  handleNewStanginsTypeSelected() {
-    this.setStandingTableData();
-    this.setTableRowStyle();
-  }
-
-  setTableRowStyle() {
-    this.evenRowColor = ColorUtils.lightenDarkenColor(
-      TeamLogosModule.selectedBackdropColor,
-      -10
-    );
-    this.oddRowColor = ColorUtils.lightenDarkenColor(
-      TeamLogosModule.selectedBackdropColor,
-      10
-    );
-  }
-
-  mounted() {
-    this.handleNewTeamSelected();
   }
 }
 </script>
@@ -232,55 +162,6 @@ export default class Standings extends Vue {
     justify-content: flex-start;
     width: 100%;
     margin-top: 80px;
-
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-      margin: 28px;
-      font-weight: 700;
-      width: calc(100% - 56px);
-      border-radius: 8px;
-      text-align: center;
-
-      thead {
-        th {
-          text-align: center;
-          padding: 8px;
-          font-size: 1.2rem;
-          border: 1px solid white;
-
-          &.table-main-header {
-            font-size: 1.5rem;
-          }
-        }
-      }
-
-      tbody {
-        tr {
-          td {
-            padding: 8px;
-            border: 1px solid white;
-
-            &.team-name-cell {
-              padding: 0;
-            }
-
-            .team-name-container {
-              display: flex;
-              align-items: center;
-              padding: 8px;
-
-              img {
-                height: 40px;
-                width: 40px;
-                border-radius: 50%;
-                margin: 0 8px;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }
 </style>
