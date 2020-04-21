@@ -1,13 +1,7 @@
-interface Map<TValue> {
-  [id: string]: TValue;
-}
+import { Map } from "@/types/data-types/map";
+import { StatLookup } from "@/types/data-types/stat-lookup";
 
-interface StatAbbrv {
-  label: string;
-  abbreviation: string;
-}
-
-const statsLookupTable: Map<StatAbbrv> = {
+const statsLookupTable: Map<StatLookup> = {
   wins: {
     label: "Wins",
     abbreviation: "W"
