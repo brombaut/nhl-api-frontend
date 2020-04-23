@@ -11,7 +11,6 @@ class LineScraper extends Api {
   }
 
   public scrapeLines(teamName: string): Promise<LabelValuePair[]> {
-    teamName = "boston-bruins";
     const url = this.buildUrl(teamName);
     return this.get<string>(url)
       .then(this.buildLinesFromResponse)
@@ -38,7 +37,6 @@ class LineScraper extends Api {
     Object.values(PositionAbbreviation).forEach(pos => {
       const playerName: string = $(`#${pos} .player-name`).text();
       allPositionNameKeyValPairs.push(new LabelValuePair(pos, playerName));
-      // allPositionNameKeyValPairs[pos] = $(`#${pos} .player-name`).text();
     });
     return allPositionNameKeyValPairs;
   }
