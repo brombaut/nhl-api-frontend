@@ -1,11 +1,13 @@
+import { TableDataCell } from "./table-data-cell";
+
 export class TableDataRow {
   id: string;
-  values: string[];
+  values: string[] | TableDataCell[];
   clickCallBack?: Function;
   entityId?: number;
 
   constructor(
-    values: string[],
+    values: string[] | TableDataCell[],
     clickCallBack?: Function,
     entityId?: number,
     id?: string
