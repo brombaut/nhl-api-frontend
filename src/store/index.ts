@@ -7,6 +7,7 @@ import { RostersState } from "./modules/rosters";
 import { PlayersState } from "./modules/players";
 import { StandingsState } from "./modules/standings";
 import { TeamLogosState } from "./modules/team-logos";
+import { LineCombinationsState } from "./modules/line-combinations";
 
 Vue.use(Vuex);
 
@@ -18,6 +19,7 @@ export interface RootState {
   players: PlayersState;
   standings: StandingsState;
   teamLogos: TeamLogosState;
+  lineCombinations: LineCombinationsState;
 }
 
 export default new Vuex.Store<RootState>({});

@@ -48,6 +48,18 @@ class Players extends VuexModule implements PlayersState {
     };
   }
 
+  public get playerByName(): (name: string) => Player {
+    return (name: string) => {
+      const player = this._players.find((player: Player) =>
+        player.fullName.includes(name)
+      );
+      if (!player) {
+        return new NullPlayer();
+      }
+      return player;
+    };
+  }
+
   @Action
   public async loadPlayer(personId: number): Promise<void> {
     const player: Player = await playersApi.getPlayerById(personId);
