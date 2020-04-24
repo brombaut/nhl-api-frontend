@@ -26,7 +26,14 @@ class LineScraper extends Api {
   }
 
   private formatTeamName(teamName: string) {
-    return teamName.toLowerCase().replace(" ", "-");
+    const formatted = teamName
+      .toLowerCase()
+      .split(" ")
+      .join("-")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(".", "");
+    return formatted;
   }
 
   private buildLinesFromResponse(
