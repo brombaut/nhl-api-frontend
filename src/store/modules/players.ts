@@ -9,6 +9,8 @@ import store from "@/store";
 import { Player, NullPlayer } from "@/types/store-types/player";
 import { playersApi } from "@/services/nhl-api-adapter/players-api";
 import { StatsModule } from "./stats";
+import { TeamsModule } from "./teams";
+import FuzzySet from "fuzzyset.js";
 
 export interface PlayersState {
   players: Array<Player>;
@@ -53,10 +55,26 @@ class Players extends VuexModule implements PlayersState {
       const player = this._players.find((player: Player) =>
         player.fullName.includes(name)
       );
-      if (!player) {
+      return player || this.closestPlayerByName(name);
+    };
+  }
+
+  public get closestPlayerByName(): (name: string) => Player {
+    return (name: string) => {
+      const teamPlayers = this._players.filter(
+        (player: Player) => player.currentTeamId === TeamsModule.selectedTeamId
+      );
+      const fs = FuzzySet();
+      teamPlayers.forEach((player: Player) => fs.add(player.fullName));
+      const results: [number, string][] | null = fs.get(name);
+      if (!results || results.length === 0) {
         return new NullPlayer();
       }
-      return player;
+      const closestName: string = results[0][1];
+      const player = teamPlayers.find(
+        (player: Player) => player.fullName === closestName
+      );
+      return player || new NullPlayer();
     };
   }
 

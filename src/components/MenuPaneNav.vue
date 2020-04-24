@@ -31,13 +31,13 @@
       >
         Lines
       </li>
-      <li
+      <!-- <li
         @click="setRoute('/special-lines')"
         :class="{ selected: currentRoute === 'specialLines' }"
         :style="navItemStyle"
       >
         PP / PK
-      </li>
+      </li> -->
       <a
         class="marginTopAuto"
         :href="teamSiteUrl"
@@ -116,7 +116,7 @@ nav {
     a {
       font-size: 2.3rem;
       font-weight: 800;
-      margin: 4px 8px;
+      margin: 8px 8px;
       padding: 4px 12px;
       text-align: left;
       width: calc(100% - 40px);
