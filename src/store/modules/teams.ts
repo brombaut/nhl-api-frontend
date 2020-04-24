@@ -77,8 +77,11 @@ class Teams extends VuexModule implements TeamsState {
 
   @Action
   public selectTeamById(teamId: number): void {
-    this.setSelectedTeamId(teamId);
+    if (teamId === this.selectedTeamId) {
+      return;
+    }
     PlayersModule.selectPlayerById(0);
+    this.setSelectedTeamId(teamId);
     window.localStorage.setItem("selectedTeamId", teamId.toString());
     if (RostersModule.teamRoster(teamId).length === 0) {
       RostersModule.loadTeamRoster(teamId);
