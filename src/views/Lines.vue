@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { LinesTableData } from "../types/data-types/lines-table-data";
 import LinesTable from "@/components/LinesTable.vue";
 import PlayerDetailsPanel from "@/components/PlayerDetailsPanel.vue";
@@ -25,6 +25,8 @@ import { DefenseAbbreviation } from "../types/data-types/defense-abbreviation";
 import { GoalieAbbreviation } from "../types/data-types/goalie-abbreviation";
 import { LinesTableDataCell } from "../types/data-types/lines-table-data-cell";
 import { TableDataRow } from "../types/data-types/table-data-row";
+import App from "@/App.vue";
+import { TableDataCell } from "../types/data-types/table-data-cell";
 
 @Component({
   components: {
@@ -33,6 +35,29 @@ import { TableDataRow } from "../types/data-types/table-data-row";
   }
 })
 export default class Lines extends Vue {
+  mounted() {
+    this.loadingFinished(this.forwardLinesTableData);
+  }
+
+  @Watch("forwardLinesTableData")
+  loadingFinished(tableData: LinesTableData) {
+    const parentElem = this.$parent as App;
+    if (tableData && !this.noDataInTableRows(tableData)) {
+      parentElem.removeViewLoadingOverlay();
+    } else {
+      parentElem.showViewLoadingOverlay();
+    }
+  }
+
+  noDataInTableRows(tableData: LinesTableData) {
+    return tableData.rows.every((row: TableDataRow) => {
+      return row.values.every((dataCell: string[] | TableDataCell) => {
+        const lineTableDataCell: LinesTableDataCell = dataCell as LinesTableDataCell;
+        return !lineTableDataCell.playerNumber && !lineTableDataCell.playerName;
+      });
+    });
+  }
+
   get forwardLinesTableData(): LinesTableData {
     const lineCount = 4;
     const title = "Forwards";
