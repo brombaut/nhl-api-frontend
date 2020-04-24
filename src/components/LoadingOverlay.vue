@@ -1,24 +1,80 @@
 <template>
-  <div class="loading-overlay">
-    <div class="square one"></div>
-    <div class="square two"></div>
-    <div class="square three"></div>
-    <div class="square four"></div>
+  <div :style="overlayStyle" class="loading-overlay">
+    <div :style="squarestyle1" class="square one"></div>
+    <div :style="squarestyle2" class="square two"></div>
+    <div :style="squarestyle3" class="square three"></div>
+    <div :style="squarestyle4" class="square four"></div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import { TeamLogosModule } from "../store/modules/team-logos";
 
 @Component
 export default class LoadingOverlay extends Vue {
+  @Prop({ default: true })
+  useTeamColors!: boolean;
+
   public removeLoadingOverlay() {
     const elem: HTMLDivElement = this.$el as HTMLDivElement;
     elem.style.opacity = "0";
     setTimeout(() => {
-      elem.parentNode?.removeChild(elem);
+      // elem.parentNode?.removeChild(elem);
+      elem.style.display = "none";
     }, 1000);
+  }
+
+  public addLoadingOverlay() {
+    const elem: HTMLDivElement = this.$el as HTMLDivElement;
+    elem.style.display = "flex";
+    elem.style.opacity = "1";
+  }
+
+  get overlayStyle() {
+    if (!this.useTeamColors) {
+      return {};
+    }
+    return {
+      "background-color": TeamLogosModule.selectedBackdropColor
+    };
+  }
+
+  get squarestyle1() {
+    if (!this.useTeamColors) {
+      return {};
+    }
+    return {
+      "background-color": TeamLogosModule.selectedPrimaryColor
+    };
+  }
+
+  get squarestyle2() {
+    if (!this.useTeamColors) {
+      return {};
+    }
+    return {
+      "background-color": TeamLogosModule.selectedSecondaryColor
+    };
+  }
+
+  get squarestyle3() {
+    if (!this.useTeamColors) {
+      return {};
+    }
+    return {
+      "background-color": TeamLogosModule.selectedPrimaryColor
+    };
+  }
+
+  get squarestyle4() {
+    if (!this.useTeamColors) {
+      return {};
+    }
+    return {
+      "background-color": TeamLogosModule.selectedSecondaryColor
+    };
   }
 }
 </script>

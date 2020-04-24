@@ -8,8 +8,9 @@
     <MenuPane />
     <main :style="mainStyles">
       <router-view />
+      <LoadingOverlay ref="viewLoadingOverlay" :useTeamColors="true" />
     </main>
-    <LoadingOverlay ref="mainLoadingOverlay" />
+    <LoadingOverlay ref="mainLoadingOverlay" :useTeamColors="false" />
   </div>
 </template>
 
@@ -56,6 +57,16 @@ export default class App extends Vue {
   removeAppLoadingOverlay() {
     const overlay = this.$refs.mainLoadingOverlay as LoadingOverlay;
     overlay.removeLoadingOverlay();
+  }
+
+  public removeViewLoadingOverlay() {
+    const overlay = this.$refs.viewLoadingOverlay as LoadingOverlay;
+    overlay.removeLoadingOverlay();
+  }
+
+  public showViewLoadingOverlay() {
+    const overlay = this.$refs.viewLoadingOverlay as LoadingOverlay;
+    overlay.addLoadingOverlay();
   }
 
   mounted() {
