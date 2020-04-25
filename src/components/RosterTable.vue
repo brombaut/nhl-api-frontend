@@ -24,6 +24,8 @@
       <tr
         v-for="(rowData, rowIndex) in rosterTableData.rows"
         :key="rowData.id"
+        @mouseenter="addHoverClass"
+        @mouseleave="removeHoverClass"
         :style="
           selectedPlayerId === rowData.entityId
             ? tableRowBrightStyle
@@ -115,6 +117,22 @@ export default class RosterTable extends Vue {
       TeamLogosModule.selectedBackdropColor,
       10
     );
+  }
+
+  addHoverClass(event: MouseEvent) {
+    const rowEl: HTMLTableRowElement = event.target as HTMLTableRowElement;
+    let percentChange: number;
+    if (ColorUtils.colorIsBright(TeamLogosModule.selectedBackdropColor)) {
+      percentChange = 85;
+    } else {
+      percentChange = 115;
+    }
+    rowEl.style.filter = `brightness(${percentChange}%)`;
+  }
+
+  removeHoverClass(event: MouseEvent) {
+    const rowEl: HTMLTableRowElement = event.target as HTMLTableRowElement;
+    rowEl.style.filter = "";
   }
 
   mounted() {

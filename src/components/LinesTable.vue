@@ -21,18 +21,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="(rowData, rowIndex) in linesTableData.rows"
-        :key="rowData.id"
-        :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
-      >
+      <tr v-for="(rowData, rowIndex) in linesTableData.rows" :key="rowData.id">
         <td
           v-for="(cell, index) in rowData.values"
           :key="index"
+          @mouseenter="addHoverClass"
+          @mouseleave="removeHoverClass"
           :style="
             selectedPlayerId === cell.playerId
               ? tableDataCellBrightStyle
-              : tableDataCellStyle
+              : rowIndex % 2 === 0
+              ? evenTableRowStyle
+              : oddTableRowStyle
           "
           @click="cell.clickCallBack()"
         >
@@ -75,12 +75,6 @@ export default class LinesTable extends Vue {
     };
   }
 
-  get tableDataCellStyle() {
-    return {
-      "border-color": TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
   get tableDataCellBrightStyle() {
     return {
       "background-color": TeamLogosModule.selectedSecondaryColor,
@@ -91,12 +85,14 @@ export default class LinesTable extends Vue {
 
   get evenTableRowStyle() {
     return {
-      "background-color": this.evenRowColor
+      "background-color": this.evenRowColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor
     };
   }
   get oddTableRowStyle() {
     return {
-      "background-color": this.oddRowColor
+      "background-color": this.oddRowColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor
     };
   }
 
@@ -114,6 +110,22 @@ export default class LinesTable extends Vue {
       TeamLogosModule.selectedBackdropColor,
       10
     );
+  }
+
+  addHoverClass(event: MouseEvent) {
+    const cellEl: HTMLTableDataCellElement = event.target as HTMLTableDataCellElement;
+    let percentChange: number;
+    if (colorUtils.colorIsBright(TeamLogosModule.selectedBackdropColor)) {
+      percentChange = 85;
+    } else {
+      percentChange = 115;
+    }
+    cellEl.style.filter = `brightness(${percentChange}%)`;
+  }
+
+  removeHoverClass(event: MouseEvent) {
+    const cellEl: HTMLTableDataCellElement = event.target as HTMLTableDataCellElement;
+    cellEl.style.filter = "";
   }
 
   mounted() {

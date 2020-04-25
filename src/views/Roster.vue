@@ -51,7 +51,7 @@ export default class Roster extends Vue {
   loadingFinished(tableData: RosterTableData) {
     const parentElem = this.$parent as App;
     if (tableData && !this.noDataInTableRows(tableData)) {
-      parentElem.removeViewLoadingOverlay();
+      setTimeout(() => parentElem.removeViewLoadingOverlay(), 1000);
     } else {
       parentElem.showViewLoadingOverlay();
     }
