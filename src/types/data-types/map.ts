@@ -1,3 +1,3 @@
-export interface Map<TValue> {
+export interface MyMap<TValue> {
   [id: string]: TValue;
 }

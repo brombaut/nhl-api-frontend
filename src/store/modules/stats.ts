@@ -12,6 +12,8 @@ import { PlayerStat } from "@/types/store-types/player-stat";
 import { playersApi } from "@/services/nhl-api-adapter/players-api";
 import { TeamStatSplit } from "@/types/store-types/team-stat-split";
 import { TeamStatSplitEntity } from "@/types/store-types/team-stat-split-entity";
+import { PlayerStatSplit } from "@/types/store-types/player-stat-split";
+import { MyMap } from "@/types/data-types/map";
 
 export interface StatsState {
   teamsStats: Array<TeamStat>;
@@ -79,6 +81,34 @@ class Stats extends VuexModule implements StatsState {
       this._playersStats.filter(
         (playerStat: PlayerStat) => playerStat.playerId === playerId
       );
+  }
+
+  public get playerStatSplitsForType(): (
+    playerId: number,
+    statType: string
+  ) => MyMap<string | number> {
+    return (playerId: number, statType: string) => {
+      const playerStats: Array<PlayerStat> = this.statsForPlayer(playerId);
+      const playerStatsForType = playerStats.find(
+        (playerStat: PlayerStat) => playerStat.type === statType
+      );
+      if (!playerStatsForType) {
+        return {};
+      }
+      let statSplits: MyMap<string | number> = {};
+      playerStatsForType.splits.forEach((split: PlayerStatSplit) => {
+        statSplits = { ...statSplits, ...split.stat };
+      });
+      return statSplits;
+    };
+  }
+
+  public get singleSeasonStatsForPlayer(): (
+    playerId: number
+  ) => MyMap<string | number> {
+    return (playerId: number) => {
+      return this.playerStatSplitsForType(playerId, "statsSingleSeason");
+    };
   }
 
   @Action

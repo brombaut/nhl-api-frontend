@@ -1,7 +1,7 @@
-import { Map } from "@/types/data-types/map";
+import { MyMap } from "@/types/data-types/map";
 import { StatLookup } from "@/types/data-types/stat-lookup";
 
-const statsLookupTable: Map<StatLookup> = {
+const statsLookupTable: MyMap<StatLookup> = {
   wins: {
     label: "Wins",
     abbreviation: "W"
