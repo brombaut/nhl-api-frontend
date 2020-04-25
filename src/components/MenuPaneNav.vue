@@ -31,7 +31,7 @@
       >
         Lines
       </li>
-      <li class="marginTopAuto"></li>
+      <span class="marginTopAuto"></span>
       <li
         v-if="teamIsNotMyTeam"
         :style="navItemStyle"
