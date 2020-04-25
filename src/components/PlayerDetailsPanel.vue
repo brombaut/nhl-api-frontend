@@ -227,7 +227,6 @@ export default class PlayerDetailsPanel extends Vue {
       this.localRegularSeasonStats = StatsModule.singleSeasonStatsForPlayer(
         playerId
       );
-      console.log(this.localRegularSeasonStats);
       this.openPanel();
     }
   }
