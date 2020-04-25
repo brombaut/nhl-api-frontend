@@ -142,7 +142,6 @@ export default class LinesTable extends Vue {
   font-weight: 700;
   border-radius: 8px;
   text-align: center;
-  // width: 100%;
 
   thead {
     th {
@@ -167,7 +166,6 @@ export default class LinesTable extends Vue {
 
         &:hover {
           cursor: pointer;
-          // filter: brightness(85%);
         }
 
         .lines-data-cell {

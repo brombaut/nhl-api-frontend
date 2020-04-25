@@ -168,12 +168,9 @@ export default class RosterTable extends Vue {
     tr {
       &:hover {
         cursor: pointer;
-        // filter: brightness(85%);
       }
       td {
         padding: 8px;
-        // border: 1px solid white;
-        // border-color: white;
         text-align: left;
 
         &.team-name-cell {
