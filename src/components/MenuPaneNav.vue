@@ -31,19 +31,15 @@
       >
         Lines
       </li>
-      <!-- <li
-        @click="setRoute('/special-lines')"
-        :class="{ selected: currentRoute === 'specialLines' }"
+      <span class="marginTopAuto"></span>
+      <li
+        v-if="teamIsNotMyTeam"
         :style="navItemStyle"
+        @click="setTeamAsSavedTeam()"
       >
-        PP / PK
-      </li> -->
-      <a
-        class="marginTopAuto"
-        :href="teamSiteUrl"
-        target="_blank"
-        :style="navItemStyle"
-      >
+        Set My Team
+      </li>
+      <a :href="teamSiteUrl" target="_blank" :style="navItemStyle">
         Official Site
       </a>
     </ul>
@@ -69,9 +65,11 @@ export default class MenuPaneNav extends Vue {
   get navItemStyle() {
     return {
       color: TeamLogosModule.selectedSecondaryColor
-      // "-webkit-text-stroke-width": "1px",
-      // "-webkit-text-stroke-color": TeamLogosModule.selectedBackdropColor
     };
+  }
+
+  get teamIsNotMyTeam() {
+    return TeamsModule.selectedTeamId !== TeamsModule.myTeamId;
   }
 
   setRoute(newRoutePath: string): void {
@@ -79,6 +77,10 @@ export default class MenuPaneNav extends Vue {
       return;
     }
     this.$router.push(newRoutePath);
+  }
+
+  setTeamAsSavedTeam(): void {
+    TeamsModule.selectMyTeamId(TeamsModule.selectedTeamId);
   }
 }
 </script>
