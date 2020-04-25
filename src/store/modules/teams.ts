@@ -15,12 +15,14 @@ import { PlayersModule } from "./players";
 export interface TeamsState {
   teams: Array<Team>;
   selectedTeamId: number;
+  myTeamId: number;
 }
 
 @Module({ dynamic: true, store, name: "teams" })
 class Teams extends VuexModule implements TeamsState {
   private _teams: Array<Team> = [];
   private _selectedTeamId = 0;
+  private _myTeamId = 0;
 
   public get teams(): Array<Team> {
     return this._teams;
@@ -28,6 +30,10 @@ class Teams extends VuexModule implements TeamsState {
 
   public get selectedTeamId(): number {
     return this._selectedTeamId;
+  }
+
+  public get myTeamId(): number {
+    return this._myTeamId;
   }
 
   public get selectedTeam(): Team {
@@ -62,10 +68,16 @@ class Teams extends VuexModule implements TeamsState {
     const teams = await teamsApi.getTeams();
     this.setTeams(teams);
     if (this.teamsSortedByName.length > 0) {
+      const localStorageMyTeamId = Number(
+        window.localStorage.getItem("myTeamId")
+      );
       const localStorageTeamId = Number(
         window.localStorage.getItem("selectedTeamId")
       );
-      if (localStorageTeamId) {
+      if (localStorageMyTeamId) {
+        this.selectTeamById(localStorageMyTeamId);
+        this.selectMyTeamId(localStorageMyTeamId);
+      } else if (localStorageTeamId) {
         this.selectTeamById(localStorageTeamId);
       } else {
         const firstTeamId: number = this.teamsSortedByName[0].id;
@@ -91,6 +103,12 @@ class Teams extends VuexModule implements TeamsState {
     }
   }
 
+  @Action
+  public selectMyTeamId(teamId: number): void {
+    window.localStorage.setItem("myTeamId", teamId.toString());
+    this.setMyTeamId(teamId);
+  }
+
   @Mutation
   private setTeams(teams: Array<Team>): void {
     this._teams = teams;
@@ -99,6 +117,11 @@ class Teams extends VuexModule implements TeamsState {
   @Mutation
   private setSelectedTeamId(teamId: number): void {
     this._selectedTeamId = teamId;
+  }
+
+  @Mutation
+  private setMyTeamId(teamId: number): void {
+    this._myTeamId = teamId;
   }
 }
 
