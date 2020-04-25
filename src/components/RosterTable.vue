@@ -24,7 +24,13 @@
       <tr
         v-for="(rowData, rowIndex) in rosterTableData.rows"
         :key="rowData.id"
-        :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
+        :style="
+          selectedPlayerId === rowData.entityId
+            ? tableRowBrightStyle
+            : rowIndex % 2 === 0
+            ? evenTableRowStyle
+            : oddTableRowStyle
+        "
         @click="rowData.clickCallBack()"
       >
         <td
@@ -45,6 +51,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import { RosterTableData } from "@/types/data-types/roster-table-data";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import ColorUtils from "@/utils/color-utils";
+import { PlayersModule } from "../store/modules/players";
 
 @Component
 export default class RosterTable extends Vue {
@@ -73,22 +80,29 @@ export default class RosterTable extends Vue {
     };
   }
 
-  get tableDataCellBrightStyle() {
+  get tableRowBrightStyle() {
     return {
-      "background-color": TeamLogosModule.selectedPrimaryColor,
-      "border-color": TeamLogosModule.selectedSecondaryColor
+      "background-color": TeamLogosModule.selectedSecondaryColor,
+      "border-color": TeamLogosModule.selectedPrimaryColor,
+      color: TeamLogosModule.selectedPrimaryColor
     };
   }
 
   get evenTableRowStyle() {
     return {
-      "background-color": this.evenRowColor
+      "background-color": this.evenRowColor,
+      color: TeamLogosModule.selectedSecondaryColor
     };
   }
   get oddTableRowStyle() {
     return {
-      "background-color": this.oddRowColor
+      "background-color": this.oddRowColor,
+      color: TeamLogosModule.selectedSecondaryColor
     };
+  }
+
+  get selectedPlayerId() {
+    return PlayersModule.selectedPlayerId;
   }
 
   @Watch("rosterTableData")
@@ -136,11 +150,12 @@ export default class RosterTable extends Vue {
     tr {
       &:hover {
         cursor: pointer;
-        filter: brightness(85%);
+        // filter: brightness(85%);
       }
       td {
         padding: 8px;
-        border: 1px solid white;
+        // border: 1px solid white;
+        // border-color: white;
         text-align: left;
 
         &.team-name-cell {

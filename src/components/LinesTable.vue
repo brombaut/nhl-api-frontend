@@ -29,7 +29,11 @@
         <td
           v-for="(cell, index) in rowData.values"
           :key="index"
-          :style="tableDataCellStyle"
+          :style="
+            selectedPlayerId === cell.playerId
+              ? tableDataCellBrightStyle
+              : tableDataCellStyle
+          "
           @click="cell.clickCallBack()"
         >
           <div class="lines-data-cell">
@@ -48,6 +52,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import colorUtils from "../utils/color-utils";
 import { LinesTableData } from "@/types/data-types/lines-table-data";
+import { PlayersModule } from "../store/modules/players";
 
 @Component
 export default class LinesTable extends Vue {
@@ -78,8 +83,9 @@ export default class LinesTable extends Vue {
 
   get tableDataCellBrightStyle() {
     return {
-      "background-color": TeamLogosModule.selectedPrimaryColor,
-      "border-color": TeamLogosModule.selectedSecondaryColor
+      "background-color": TeamLogosModule.selectedSecondaryColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor,
+      color: TeamLogosModule.selectedPrimaryColor
     };
   }
 
@@ -92,6 +98,10 @@ export default class LinesTable extends Vue {
     return {
       "background-color": this.oddRowColor
     };
+  }
+
+  get selectedPlayerId() {
+    return PlayersModule.selectedPlayerId;
   }
 
   @Watch("linesTableData")
@@ -145,7 +155,7 @@ export default class LinesTable extends Vue {
 
         &:hover {
           cursor: pointer;
-          filter: brightness(85%);
+          // filter: brightness(85%);
         }
 
         .lines-data-cell {
