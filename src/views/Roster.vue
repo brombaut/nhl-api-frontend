@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { RostersModule } from "../store/modules/rosters";
 import { RosterRelation } from "../types/store-types/roster-relation";
 import { PlayersModule } from "../store/modules/players";
@@ -20,6 +20,8 @@ import { TableDataRow } from "../types/data-types/table-data-row";
 import { RosterTableData } from "../types/data-types/roster-table-data";
 import PlayerDetailsPanel from "@/components/PlayerDetailsPanel.vue";
 import RosterTable from "@/components/RosterTable.vue";
+import { TableDataCell } from "../types/data-types/table-data-cell";
+import App from "@/App.vue";
 
 type RosterRowData = RosterRelation & Player;
 
@@ -40,6 +42,29 @@ export default class Roster extends Vue {
     "Born",
     "Birthplace"
   ];
+
+  mounted() {
+    this.loadingFinished(this.forwardsRosterTableData);
+  }
+
+  @Watch("forwardsRosterTableData")
+  loadingFinished(tableData: RosterTableData) {
+    const parentElem = this.$parent as App;
+    if (tableData && !this.noDataInTableRows(tableData)) {
+      setTimeout(() => parentElem.removeViewLoadingOverlay(), 1000);
+    } else {
+      parentElem.showViewLoadingOverlay();
+    }
+  }
+
+  noDataInTableRows(tableData: RosterTableData) {
+    return tableData.rows.every((row: TableDataRow) => {
+      return row.values.every((dataCell: string | TableDataCell) => {
+        const rosterTableDataCell: string = dataCell as string;
+        return !rosterTableDataCell;
+      });
+    });
+  }
 
   get forwardsRosterTableData() {
     const title = "Forwards";
@@ -116,7 +141,7 @@ export default class Roster extends Vue {
       player.fullBirthPlace
     ];
     const clickCallback = () => PlayersModule.selectPlayerById(player.id);
-    return new TableDataRow(values, clickCallback);
+    return new TableDataRow(values, clickCallback, player.id);
   }
 }
 </script>

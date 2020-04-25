@@ -51,7 +51,7 @@ export default class Lines extends Vue {
 
   noDataInTableRows(tableData: LinesTableData) {
     return tableData.rows.every((row: TableDataRow) => {
-      return row.values.every((dataCell: string[] | TableDataCell) => {
+      return row.values.every((dataCell: string | TableDataCell) => {
         const lineTableDataCell: LinesTableDataCell = dataCell as LinesTableDataCell;
         return !lineTableDataCell.playerNumber && !lineTableDataCell.playerName;
       });
@@ -121,7 +121,8 @@ export default class Lines extends Vue {
     return new LinesTableDataCell(
       player.primaryNumber,
       player.fullName,
-      clickCallback
+      clickCallback,
+      player.id
     );
   }
 }

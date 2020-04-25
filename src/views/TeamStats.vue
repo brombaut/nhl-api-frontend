@@ -9,12 +9,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { StatsModule } from "../store/modules/stats";
 import { TeamsModule } from "../store/modules/teams";
 import AreaChart from "@/components/charts/AreaChart.vue";
 import { ChartDataBuilder } from "../types/data-types/chart-data-builder";
 import { ChartData } from "../types/data-types/chart-data";
+import App from "@/App.vue";
 
 @Component({
   components: {
@@ -22,6 +23,25 @@ import { ChartData } from "../types/data-types/chart-data";
   }
 })
 export default class TeamStats extends Vue {
+  mounted() {
+    this.loadingFinished(this.tempStatSplits);
+  }
+
+  @Watch("tempStatSplits")
+  loadingFinished(statsSplits: { singleSeason: object; ranked: object }) {
+    const parentElem = this.$parent as App;
+    const loading =
+      Object.keys(statsSplits.singleSeason).length === 0 &&
+      statsSplits.singleSeason.constructor === Object &&
+      Object.keys(statsSplits.ranked).length === 0 &&
+      statsSplits.ranked.constructor === Object;
+    if (!loading) {
+      parentElem.removeViewLoadingOverlay();
+    } else {
+      parentElem.showViewLoadingOverlay();
+    }
+  }
+
   get tempStatSplits() {
     const teamId = TeamsModule.selectedTeamId;
     return {

@@ -21,15 +21,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="(rowData, rowIndex) in linesTableData.rows"
-        :key="rowData.id"
-        :style="rowIndex % 2 === 0 ? evenTableRowStyle : oddTableRowStyle"
-      >
+      <tr v-for="(rowData, rowIndex) in linesTableData.rows" :key="rowData.id">
         <td
           v-for="(cell, index) in rowData.values"
           :key="index"
-          :style="tableDataCellStyle"
+          @mouseenter="addHoverClass"
+          @mouseleave="removeHoverClass"
+          :style="
+            selectedPlayerId === cell.playerId
+              ? tableDataCellBrightStyle
+              : rowIndex % 2 === 0
+              ? evenTableRowStyle
+              : oddTableRowStyle
+          "
           @click="cell.clickCallBack()"
         >
           <div class="lines-data-cell">
@@ -48,6 +52,7 @@ import { Component, Prop, Watch } from "vue-property-decorator";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import colorUtils from "../utils/color-utils";
 import { LinesTableData } from "@/types/data-types/lines-table-data";
+import { PlayersModule } from "../store/modules/players";
 
 @Component
 export default class LinesTable extends Vue {
@@ -70,28 +75,29 @@ export default class LinesTable extends Vue {
     };
   }
 
-  get tableDataCellStyle() {
-    return {
-      "border-color": TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
   get tableDataCellBrightStyle() {
     return {
-      "background-color": TeamLogosModule.selectedPrimaryColor,
-      "border-color": TeamLogosModule.selectedSecondaryColor
+      "background-color": TeamLogosModule.selectedSecondaryColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor,
+      color: TeamLogosModule.selectedPrimaryColor
     };
   }
 
   get evenTableRowStyle() {
     return {
-      "background-color": this.evenRowColor
+      "background-color": this.evenRowColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor
     };
   }
   get oddTableRowStyle() {
     return {
-      "background-color": this.oddRowColor
+      "background-color": this.oddRowColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor
     };
+  }
+
+  get selectedPlayerId() {
+    return PlayersModule.selectedPlayerId;
   }
 
   @Watch("linesTableData")
@@ -104,6 +110,22 @@ export default class LinesTable extends Vue {
       TeamLogosModule.selectedBackdropColor,
       10
     );
+  }
+
+  addHoverClass(event: MouseEvent) {
+    const cellEl: HTMLTableDataCellElement = event.target as HTMLTableDataCellElement;
+    let percentChange: number;
+    if (colorUtils.colorIsBright(TeamLogosModule.selectedBackdropColor)) {
+      percentChange = 85;
+    } else {
+      percentChange = 115;
+    }
+    cellEl.style.filter = `brightness(${percentChange}%)`;
+  }
+
+  removeHoverClass(event: MouseEvent) {
+    const cellEl: HTMLTableDataCellElement = event.target as HTMLTableDataCellElement;
+    cellEl.style.filter = "";
   }
 
   mounted() {
@@ -120,7 +142,6 @@ export default class LinesTable extends Vue {
   font-weight: 700;
   border-radius: 8px;
   text-align: center;
-  // width: 100%;
 
   thead {
     th {
@@ -145,7 +166,6 @@ export default class LinesTable extends Vue {
 
         &:hover {
           cursor: pointer;
-          filter: brightness(85%);
         }
 
         .lines-data-cell {
