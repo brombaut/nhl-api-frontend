@@ -8,7 +8,7 @@
         }"
         :style="navItemStyle"
       >
-        Standings
+        StandingsTE
       </li>
       <li
         @click="setRoute('team-stats')"
