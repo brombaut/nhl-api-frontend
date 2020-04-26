@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import { StandingsModule } from "../store/modules/standings";
 import { TeamLogosModule } from "../store/modules/team-logos";
 import { TeamsModule } from "../store/modules/teams";
@@ -25,6 +25,7 @@ import { StandingsTeamRecord } from "../types/store-types/stadings-team-record";
 import StandingsTable from "@/components/StandingsTable.vue";
 import { StandingsTableData } from "../types/data-types/standings-table-data";
 import { TableDataRow } from "../types/data-types/table-data-row";
+import App from "@/App.vue";
 
 @Component({
   components: {
@@ -48,6 +49,20 @@ export default class Standings extends Vue {
   ];
   readonly teamNameColumnInde = 1;
   readonly baseHighlightIndexes: number[] = [0];
+
+  mounted() {
+    this.loadingFinished(this.standingsTableData);
+  }
+
+  @Watch("standingsTableData")
+  loadingFinished(tableData: StandingsTableData[]) {
+    const parentElem = this.$parent as App;
+    if (tableData && tableData.length > 0) {
+      parentElem.removeViewLoadingOverlay();
+    } else {
+      parentElem.removeViewLoadingOverlay();
+    }
+  }
 
   get selectedStandings() {
     return StandingsModule.selectedStandings;
@@ -136,10 +151,6 @@ export default class Standings extends Vue {
       );
     }
     return standingsObj.league.name;
-  }
-
-  get selectedTeamId() {
-    return TeamsModule.selectedTeamId;
   }
 }
 </script>

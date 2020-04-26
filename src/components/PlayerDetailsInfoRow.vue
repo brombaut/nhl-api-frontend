@@ -7,11 +7,11 @@
     >
       <div class="label-value-container">
         <span class="label" :style="genInfoLabelStyle">{{ pair.label }}:</span>
-        {{ pair.value }}
+        <span>{{ pair.value }}</span>
       </div>
       <div
         v-if="index < pairs.length - 1"
-        class="label"
+        class="divider"
         :style="genInfoLabelStyle"
       >
         |
@@ -50,11 +50,18 @@ export default class PlayerDetailsInfoRow extends Vue {
     display: flex;
     justify-content: space-around;
     flex: 1;
+
+    .label {
+      margin-right: 4px;
+    }
+
+    .divider {
+      margin: 0 4px;
+    }
   }
 
   .gen-info-label {
     color: #9c9c9c;
-    // filter: brightness(50%);
   }
 }
 </style>

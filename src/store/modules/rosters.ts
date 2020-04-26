@@ -11,6 +11,7 @@ import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { TeamsModule } from "./teams";
 import { RosterRelation } from "@/types/store-types/roster-relation";
 import { PlayersModule } from "./players";
+import { LineCombinationsModule } from "./line-combinations";
 
 export interface RostersState {
   rosters: Array<Roster>;
@@ -41,10 +42,15 @@ class Rosters extends VuexModule implements RostersState {
   @Action
   public async loadTeamRoster(teamId: number): Promise<void> {
     const roster: Roster = await teamsApi.getTeamRoster(teamId);
-    roster.rosterRelations.map((rr: RosterRelation) =>
+    // Wait for all players to be loaded in and then load team lines
+    const promises = roster.rosterRelations.map((rr: RosterRelation) =>
       PlayersModule.loadPlayer(rr.personId)
     );
     this.addRoster(roster);
+    await Promise.all(promises);
+    if (LineCombinationsModule.teamLines(teamId).length === 0) {
+      LineCombinationsModule.loadTeamLineCombinations(teamId);
+    }
   }
 
   @Mutation

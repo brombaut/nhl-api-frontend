@@ -5,7 +5,6 @@ const lightenDarkenColor = function(colorCode: string, amount: number): string {
     colorCode = colorCode.slice(1);
     usePound = true;
   }
-
   const num = parseInt(colorCode, 16);
 
   let r = (num >> 16) + amount;
@@ -29,8 +28,21 @@ const lightenDarkenColor = function(colorCode: string, amount: number): string {
   if (g > 255) {
     g = 255; // eslint-disable-next-line
   }
-
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
+  // const resultCode: string = (g | (b << 8) | (r << 16)).toString(16);
+  let rResultCode = r.toString(16);
+  if (rResultCode.length === 1) {
+    rResultCode = `0${rResultCode}`;
+  }
+  let bResultCode = b.toString(16);
+  if (bResultCode.length === 1) {
+    bResultCode = `0${bResultCode}`;
+  }
+  let gResultCode = g.toString(16);
+  if (gResultCode.length === 1) {
+    gResultCode = `0${gResultCode}`;
+  }
+  const newResultCode = `${rResultCode}${bResultCode}${gResultCode}`;
+  return (usePound ? "#" : "") + newResultCode;
 };
 
 // eslint-disable-next-line

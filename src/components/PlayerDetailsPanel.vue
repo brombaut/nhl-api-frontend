@@ -8,10 +8,21 @@
     </header>
     <div class="details-panel" v-show="selectedPlayerId">
       <h4 class="name">{{ firstName }}<br />{{ lastName }} {{ nameSuffix }}</h4>
-      <PlayerDetailsInfoRow :pairs="rowInfo1" />
-      <PlayerDetailsInfoRow :pairs="rowInfo2" />
-      <PlayerDetailsInfoRow :pairs="rowInfo3" />
-      <PlayerDetailsInfoRow :pairs="rowInfo4" />
+      <PlayerDetailsInfoRow :pairs="ageHeightWeight" />
+      <PlayerDetailsInfoRow :pairs="positionShootsCatches" />
+      <hr :style="hrStyle" />
+      <h3>Regular Season Stats</h3>
+      <span v-if="selectedPlayer.primaryPosition.code === 'G'">
+        <PlayerDetailsInfoRow :pairs="winsLossesOt" />
+        <PlayerDetailsInfoRow :pairs="gamesShutoutsSavePercentage" />
+        <PlayerDetailsInfoRow :pairs="savesAllowedGaa" />
+      </span>
+      <span v-else>
+        <PlayerDetailsInfoRow :pairs="pointsGoalsAssists" />
+        <PlayerDetailsInfoRow :pairs="gamesHitsPlusMinus" />
+        <PlayerDetailsInfoRow :pairs="shotsShotPercentageBlocks" />
+        <PlayerDetailsInfoRow :pairs="pimTOIPG" />
+      </span>
     </div>
   </div>
 </template>
@@ -24,6 +35,8 @@ import { PlayersModule } from "../store/modules/players";
 import { TeamsModule } from "../store/modules/teams";
 import PlayerDetailsInfoRow from "@/components/PlayerDetailsInfoRow.vue";
 import { LabelValuePair } from "../types/data-types/label-value-pair";
+import { StatsModule } from "../store/modules/stats";
+import { MyMap } from "@/types/data-types/map";
 
 @Component({
   components: {
@@ -31,6 +44,8 @@ import { LabelValuePair } from "../types/data-types/label-value-pair";
   }
 })
 export default class PlayerDetailsPanel extends Vue {
+  private localRegularSeasonStats: MyMap<string | number> = {};
+
   get panelStyle() {
     return {
       "background-color": TeamLogosModule.selectedPrimaryColor,
@@ -86,7 +101,13 @@ export default class PlayerDetailsPanel extends Vue {
     return "";
   }
 
-  get rowInfo1(): LabelValuePair[] {
+  get hrStyle() {
+    return {
+      "border-color": TeamLogosModule.selectedSecondaryColor
+    };
+  }
+
+  get ageHeightWeight(): LabelValuePair[] {
     const labelValues: LabelValuePair[] = [
       new LabelValuePair("Age", this.selectedPlayer.currentAge),
       new LabelValuePair("Height", this.selectedPlayer.height),
@@ -95,7 +116,7 @@ export default class PlayerDetailsPanel extends Vue {
     return labelValues;
   }
 
-  get rowInfo2(): LabelValuePair[] {
+  get positionShootsCatches(): LabelValuePair[] {
     const labelValues: LabelValuePair[] = [
       new LabelValuePair("Position", this.selectedPlayer.primaryPosition.name),
       new LabelValuePair("Shoots/Catches", this.selectedPlayer.shootsCatches)
@@ -103,16 +124,97 @@ export default class PlayerDetailsPanel extends Vue {
     return labelValues;
   }
 
-  get rowInfo3(): LabelValuePair[] {
+  get pointsGoalsAssists(): LabelValuePair[] {
     const labelValues: LabelValuePair[] = [
-      new LabelValuePair("Birth Place", this.selectedPlayer.fullBirthPlace)
+      new LabelValuePair(
+        "Points",
+        this.localRegularSeasonStats.points as string
+      ),
+      new LabelValuePair("Goals", this.localRegularSeasonStats.goals as string),
+      new LabelValuePair(
+        "Assists",
+        this.localRegularSeasonStats.assists as string
+      )
     ];
     return labelValues;
   }
 
-  get rowInfo4(): LabelValuePair[] {
+  get gamesHitsPlusMinus(): LabelValuePair[] {
     const labelValues: LabelValuePair[] = [
-      new LabelValuePair("Birth Date", this.selectedPlayer.birthDate)
+      new LabelValuePair("Games", this.localRegularSeasonStats.games as string),
+      new LabelValuePair("Hits", this.localRegularSeasonStats.hits as string),
+      new LabelValuePair(
+        "+/-",
+        this.localRegularSeasonStats.plusMinus as string
+      )
+    ];
+    return labelValues;
+  }
+
+  get shotsShotPercentageBlocks(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Shots", this.localRegularSeasonStats.shots as string),
+      new LabelValuePair(
+        "Shot %",
+        this.localRegularSeasonStats.shotPct as string
+      ),
+      new LabelValuePair(
+        "Blocked",
+        this.localRegularSeasonStats.blocked as string
+      )
+    ];
+    return labelValues;
+  }
+
+  get pimTOIPG(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("PIM", this.localRegularSeasonStats.pim as string),
+      new LabelValuePair(
+        "TOI/G",
+        this.localRegularSeasonStats.timeOnIcePerGame as string
+      )
+    ];
+    return labelValues;
+  }
+
+  get winsLossesOt(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Wins", this.localRegularSeasonStats.wins as string),
+      new LabelValuePair(
+        "Losses",
+        this.localRegularSeasonStats.losses as string
+      ),
+      new LabelValuePair("OT", this.localRegularSeasonStats.ot as string)
+    ];
+    return labelValues;
+  }
+
+  get gamesShutoutsSavePercentage(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Games", this.localRegularSeasonStats.games as string),
+      new LabelValuePair(
+        "Shutouts",
+        this.localRegularSeasonStats.shutouts as string
+      ),
+      new LabelValuePair(
+        "Save %",
+        this.localRegularSeasonStats.savePercentage as string
+      )
+    ];
+    return labelValues;
+  }
+
+  get savesAllowedGaa(): LabelValuePair[] {
+    const labelValues: LabelValuePair[] = [
+      new LabelValuePair("Saves", this.localRegularSeasonStats.saves as string),
+      new LabelValuePair(
+        "Allowed",
+        this.localRegularSeasonStats.goalsAgainst as string
+      ),
+      new LabelValuePair(
+        "GAA",
+        this.localRegularSeasonStats.goalAgainstAverage as string
+      )
     ];
     return labelValues;
   }
@@ -122,6 +224,9 @@ export default class PlayerDetailsPanel extends Vue {
     if (playerId === 0) {
       this.closePanel();
     } else {
+      this.localRegularSeasonStats = StatsModule.singleSeasonStatsForPlayer(
+        playerId
+      );
       this.openPanel();
     }
   }

@@ -7,9 +7,10 @@
     <TeamSelector />
     <MenuPane />
     <main :style="mainStyles">
-      <!-- <MainHeader /> -->
       <router-view />
+      <LoadingOverlay ref="viewLoadingOverlay" :useTeamColors="true" />
     </main>
+    <LoadingOverlay ref="mainLoadingOverlay" :useTeamColors="false" />
   </div>
 </template>
 
@@ -22,12 +23,15 @@ import { ConferencesModule } from "./store/modules/conferences";
 import { StandingsModule } from "./store/modules/standings";
 import TeamSelector from "@/components/TeamSelector.vue";
 import MenuPane from "@/components/MenuPane.vue";
+import LoadingOverlay from "@/components/LoadingOverlay.vue";
 import { TeamLogosModule } from "./store/modules/team-logos";
+import { TeamLogo } from "./types/data-types/team-logo";
 
 @Component({
   components: {
     TeamSelector,
-    MenuPane
+    MenuPane,
+    LoadingOverlay
   }
 })
 export default class App extends Vue {
@@ -37,15 +41,38 @@ export default class App extends Vue {
     };
   }
 
-  public loadInitialData(): void {
+  loadInitialData(): void {
     ConferencesModule.loadConferences();
     DivisionsModule.loadDivisions();
     TeamsModule.loadTeams();
     StandingsModule.loadStandingsTypes();
   }
 
+  requireImages() {
+    TeamLogosModule.teamLogos.map((teamLogo: TeamLogo) => {
+      require(`./assets/team-logos/${teamLogo.fileName}`);
+    });
+  }
+
+  removeAppLoadingOverlay() {
+    const overlay = this.$refs.mainLoadingOverlay as LoadingOverlay;
+    overlay.removeLoadingOverlay();
+  }
+
+  public removeViewLoadingOverlay() {
+    const overlay = this.$refs.viewLoadingOverlay as LoadingOverlay;
+    overlay.removeLoadingOverlay();
+  }
+
+  public showViewLoadingOverlay() {
+    const overlay = this.$refs.viewLoadingOverlay as LoadingOverlay;
+    overlay.addLoadingOverlay();
+  }
+
   mounted() {
     this.loadInitialData();
+    this.requireImages();
+    setTimeout(this.removeAppLoadingOverlay, 1000);
   }
 }
 </script>
@@ -70,6 +97,7 @@ body {
   width: 100%;
   display: flex;
   user-select: none;
+  position: relative;
 
   main {
     flex: 1;

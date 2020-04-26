@@ -11,7 +11,9 @@ import { teamsApi } from "@/services/nhl-api-adapter/teams-api";
 import { PlayerStat } from "@/types/store-types/player-stat";
 import { playersApi } from "@/services/nhl-api-adapter/players-api";
 import { TeamStatSplit } from "@/types/store-types/team-stat-split";
-import { TeamEntity } from "@/types/store-types/team";
+import { TeamStatSplitEntity } from "@/types/store-types/team-stat-split-entity";
+import { PlayerStatSplit } from "@/types/store-types/player-stat-split";
+import { MyMap } from "@/types/data-types/map";
 
 export interface StatsState {
   teamsStats: Array<TeamStat>;
@@ -41,7 +43,7 @@ class Stats extends VuexModule implements StatsState {
   public get teamStatSplitsForType(): (
     teamId: number,
     statType: string
-  ) => any {
+  ) => TeamStatSplitEntity {
     return (teamId: number, statType: string) => {
       const teamStats: Array<TeamStat> = this.statsForTeam(teamId);
       const teamStatsForType = teamStats.find(
@@ -50,7 +52,7 @@ class Stats extends VuexModule implements StatsState {
       if (!teamStatsForType) {
         return {};
       }
-      let statSplits: any;
+      let statSplits: TeamStatSplitEntity = {};
       teamStatsForType.splits.forEach((split: TeamStatSplit) => {
         statSplits = { ...statSplits, ...split.stat };
       });
@@ -58,7 +60,9 @@ class Stats extends VuexModule implements StatsState {
     };
   }
 
-  public get singleSeasonStatsForTeam(): (teamId: number) => TeamStatSplit {
+  public get singleSeasonStatsForTeam(): (
+    teamId: number
+  ) => TeamStatSplitEntity {
     return (teamId: number) => {
       return this.teamStatSplitsForType(teamId, "statsSingleSeason");
     };
@@ -66,7 +70,7 @@ class Stats extends VuexModule implements StatsState {
 
   public get regularSeasonRankingStatsForTeam(): (
     teamId: number
-  ) => TeamStatSplit {
+  ) => TeamStatSplitEntity {
     return (teamId: number) => {
       return this.teamStatSplitsForType(teamId, "regularSeasonStatRankings");
     };
@@ -77,6 +81,34 @@ class Stats extends VuexModule implements StatsState {
       this._playersStats.filter(
         (playerStat: PlayerStat) => playerStat.playerId === playerId
       );
+  }
+
+  public get playerStatSplitsForType(): (
+    playerId: number,
+    statType: string
+  ) => MyMap<string | number> {
+    return (playerId: number, statType: string) => {
+      const playerStats: Array<PlayerStat> = this.statsForPlayer(playerId);
+      const playerStatsForType = playerStats.find(
+        (playerStat: PlayerStat) => playerStat.type === statType
+      );
+      if (!playerStatsForType) {
+        return {};
+      }
+      let statSplits: MyMap<string | number> = {};
+      playerStatsForType.splits.forEach((split: PlayerStatSplit) => {
+        statSplits = { ...statSplits, ...split.stat };
+      });
+      return statSplits;
+    };
+  }
+
+  public get singleSeasonStatsForPlayer(): (
+    playerId: number
+  ) => MyMap<string | number> {
+    return (playerId: number) => {
+      return this.playerStatSplitsForType(playerId, "statsSingleSeason");
+    };
   }
 
   @Action

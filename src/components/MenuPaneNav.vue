@@ -2,7 +2,7 @@
   <nav class="menu-pane-options-wrapper">
     <ul>
       <li
-        @click="setRoute('/standings')"
+        @click="setRoute('standings')"
         :class="{
           selected: currentRoute === 'standings' || currentRoute === 'root'
         }"
@@ -11,39 +11,35 @@
         Standings
       </li>
       <li
-        @click="setRoute('/team-stats')"
+        @click="setRoute('team-stats')"
         :class="{ selected: currentRoute === 'teamStats' }"
         :style="navItemStyle"
       >
         Stats
       </li>
       <li
-        @click="setRoute('/roster')"
+        @click="setRoute('roster')"
         :class="{ selected: currentRoute === 'roster' }"
         :style="navItemStyle"
       >
         Roster
       </li>
       <li
-        @click="setRoute('/lines')"
+        @click="setRoute('lines')"
         :class="{ selected: currentRoute === 'lines' }"
         :style="navItemStyle"
       >
         Lines
       </li>
+      <span class="marginTopAuto"></span>
       <li
-        @click="setRoute('/special-lines')"
-        :class="{ selected: currentRoute === 'specialLines' }"
+        v-if="teamIsNotMyTeam"
         :style="navItemStyle"
+        @click="setTeamAsSavedTeam()"
       >
-        PP / PK
+        Set My Team
       </li>
-      <a
-        class="marginTopAuto"
-        :href="teamSiteUrl"
-        target="_blank"
-        :style="navItemStyle"
-      >
+      <a :href="teamSiteUrl" target="_blank" :style="navItemStyle">
         Official Site
       </a>
     </ul>
@@ -69,9 +65,11 @@ export default class MenuPaneNav extends Vue {
   get navItemStyle() {
     return {
       color: TeamLogosModule.selectedSecondaryColor
-      // "-webkit-text-stroke-width": "1px",
-      // "-webkit-text-stroke-color": TeamLogosModule.selectedBackdropColor
     };
+  }
+
+  get teamIsNotMyTeam() {
+    return TeamsModule.selectedTeamId !== TeamsModule.myTeamId;
   }
 
   setRoute(newRoutePath: string): void {
@@ -79,6 +77,10 @@ export default class MenuPaneNav extends Vue {
       return;
     }
     this.$router.push(newRoutePath);
+  }
+
+  setTeamAsSavedTeam(): void {
+    TeamsModule.selectMyTeamId(TeamsModule.selectedTeamId);
   }
 }
 </script>
@@ -116,7 +118,7 @@ nav {
     a {
       font-size: 2.3rem;
       font-weight: 800;
-      margin: 4px 8px;
+      margin: 8px 8px;
       padding: 4px 12px;
       text-align: left;
       width: calc(100% - 40px);

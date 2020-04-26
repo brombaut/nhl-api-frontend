@@ -1,18 +1,18 @@
 <template>
-  <table class="roster-table" :style="tableStyle">
+  <table class="lines-table" :style="tableStyle">
     <thead>
       <tr>
         <th
           class="table-main-header"
           :style="tableHeaderCellStyle"
-          :colspan="rosterTableData.columns.length"
+          :colspan="linesTableData.columns.length"
         >
-          {{ rosterTableData.title }}
+          {{ linesTableData.title }}
         </th>
       </tr>
       <tr>
         <th
-          v-for="column in rosterTableData.columns"
+          v-for="column in linesTableData.columns"
           :key="column"
           :style="tableHeaderCellStyle"
         >
@@ -21,26 +21,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="(rowData, rowIndex) in rosterTableData.rows"
-        :key="rowData.id"
-        @mouseenter="addHoverClass"
-        @mouseleave="removeHoverClass"
-        :style="
-          selectedPlayerId === rowData.entityId
-            ? tableRowBrightStyle
-            : rowIndex % 2 === 0
-            ? evenTableRowStyle
-            : oddTableRowStyle
-        "
-        @click="rowData.clickCallBack()"
-      >
+      <tr v-for="(rowData, rowIndex) in linesTableData.rows" :key="rowData.id">
         <td
-          v-for="(rowItem, index) in rowData.values"
+          v-for="(cell, index) in rowData.values"
           :key="index"
-          :style="tableDataCellStyle"
+          @mouseenter="addHoverClass"
+          @mouseleave="removeHoverClass"
+          :style="
+            selectedPlayerId === cell.playerId
+              ? tableDataCellBrightStyle
+              : rowIndex % 2 === 0
+              ? evenTableRowStyle
+              : oddTableRowStyle
+          "
+          @click="cell.clickCallBack()"
         >
-          {{ rowItem }}
+          <div class="lines-data-cell">
+            <div class="number">{{ cell.playerNumber }}</div>
+            <div class="name">{{ cell.playerName }}</div>
+          </div>
         </td>
       </tr>
     </tbody>
@@ -50,18 +49,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop, Watch } from "vue-property-decorator";
-import { RosterTableData } from "@/types/data-types/roster-table-data";
 import { TeamLogosModule } from "../store/modules/team-logos";
-import ColorUtils from "@/utils/color-utils";
+import colorUtils from "../utils/color-utils";
+import { LinesTableData } from "@/types/data-types/lines-table-data";
 import { PlayersModule } from "../store/modules/players";
 
 @Component
-export default class RosterTable extends Vue {
+export default class LinesTable extends Vue {
   evenRowColor = "";
   oddRowColor = "";
 
   @Prop({ required: true })
-  rosterTableData!: RosterTableData;
+  linesTableData!: LinesTableData[];
 
   get tableStyle() {
     return {
@@ -76,16 +75,10 @@ export default class RosterTable extends Vue {
     };
   }
 
-  get tableDataCellStyle() {
-    return {
-      "border-color": TeamLogosModule.selectedSecondaryColor
-    };
-  }
-
-  get tableRowBrightStyle() {
+  get tableDataCellBrightStyle() {
     return {
       "background-color": TeamLogosModule.selectedSecondaryColor,
-      "border-color": TeamLogosModule.selectedPrimaryColor,
+      "border-color": TeamLogosModule.selectedSecondaryColor,
       color: TeamLogosModule.selectedPrimaryColor
     };
   }
@@ -93,13 +86,13 @@ export default class RosterTable extends Vue {
   get evenTableRowStyle() {
     return {
       "background-color": this.evenRowColor,
-      color: TeamLogosModule.selectedSecondaryColor
+      "border-color": TeamLogosModule.selectedSecondaryColor
     };
   }
   get oddTableRowStyle() {
     return {
       "background-color": this.oddRowColor,
-      color: TeamLogosModule.selectedSecondaryColor
+      "border-color": TeamLogosModule.selectedSecondaryColor
     };
   }
 
@@ -107,32 +100,32 @@ export default class RosterTable extends Vue {
     return PlayersModule.selectedPlayerId;
   }
 
-  @Watch("rosterTableData")
+  @Watch("linesTableData")
   setTableRowStyle() {
-    this.evenRowColor = ColorUtils.lightenDarkenColor(
+    this.evenRowColor = colorUtils.lightenDarkenColor(
       TeamLogosModule.selectedBackdropColor,
       -10
     );
-    this.oddRowColor = ColorUtils.lightenDarkenColor(
+    this.oddRowColor = colorUtils.lightenDarkenColor(
       TeamLogosModule.selectedBackdropColor,
       10
     );
   }
 
   addHoverClass(event: MouseEvent) {
-    const rowEl: HTMLTableRowElement = event.target as HTMLTableRowElement;
+    const cellEl: HTMLTableDataCellElement = event.target as HTMLTableDataCellElement;
     let percentChange: number;
-    if (ColorUtils.colorIsBright(TeamLogosModule.selectedBackdropColor)) {
+    if (colorUtils.colorIsBright(TeamLogosModule.selectedBackdropColor)) {
       percentChange = 85;
     } else {
       percentChange = 115;
     }
-    rowEl.style.filter = `brightness(${percentChange}%)`;
+    cellEl.style.filter = `brightness(${percentChange}%)`;
   }
 
   removeHoverClass(event: MouseEvent) {
-    const rowEl: HTMLTableRowElement = event.target as HTMLTableRowElement;
-    rowEl.style.filter = "";
+    const cellEl: HTMLTableDataCellElement = event.target as HTMLTableDataCellElement;
+    cellEl.style.filter = "";
   }
 
   mounted() {
@@ -142,14 +135,13 @@ export default class RosterTable extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.roster-table {
+.lines-table {
   border-collapse: collapse;
   border-spacing: 0;
   margin: 28px;
   font-weight: 700;
   border-radius: 8px;
   text-align: center;
-  width: 100%;
 
   thead {
     th {
@@ -166,27 +158,25 @@ export default class RosterTable extends Vue {
 
   tbody {
     tr {
-      &:hover {
-        cursor: pointer;
-      }
       td {
         padding: 8px;
+        border: 1px solid white;
         text-align: left;
+        width: 300px;
 
-        &.team-name-cell {
-          padding: 0;
+        &:hover {
+          cursor: pointer;
         }
 
-        .team-name-container {
+        .lines-data-cell {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          padding: 8px;
+          justify-content: space-around;
 
-          img {
-            height: 40px;
-            width: 40px;
-            border-radius: 50%;
-            margin: 0 8px;
+          .number {
+            font-size: 3rem;
+            font-weight: 700;
           }
         }
       }
