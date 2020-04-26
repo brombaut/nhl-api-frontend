@@ -11,5 +11,6 @@ deploy:
  skip_cleanup: true
  github_token: $TRAVISTOKEN
  local_dir: dist
+ verbose: true
  on:
-   branch: master:gh-pages
+   branch: develop
