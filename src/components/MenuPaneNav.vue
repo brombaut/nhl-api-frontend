@@ -2,7 +2,7 @@
   <nav class="menu-pane-options-wrapper">
     <ul>
       <li
-        @click="setRoute('/standings')"
+        @click="setRoute('standings')"
         :class="{
           selected: currentRoute === 'standings' || currentRoute === 'root'
         }"
@@ -11,21 +11,21 @@
         Standings
       </li>
       <li
-        @click="setRoute('/team-stats')"
+        @click="setRoute('team-stats')"
         :class="{ selected: currentRoute === 'teamStats' }"
         :style="navItemStyle"
       >
         Stats
       </li>
       <li
-        @click="setRoute('/roster')"
+        @click="setRoute('roster')"
         :class="{ selected: currentRoute === 'roster' }"
         :style="navItemStyle"
       >
         Roster
       </li>
       <li
-        @click="setRoute('/lines')"
+        @click="setRoute('lines')"
         :class="{ selected: currentRoute === 'lines' }"
         :style="navItemStyle"
       >
