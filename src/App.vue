@@ -4,13 +4,18 @@
       href="https://fonts.googleapis.com/css?family=Lato"
       rel="stylesheet"
     />
-    <TeamSelector />
-    <MenuPane />
-    <main :style="mainStyles">
-      <router-view />
-      <LoadingOverlay ref="viewLoadingOverlay" :useTeamColors="true" />
-    </main>
-    <LoadingOverlay ref="mainLoadingOverlay" :useTeamColors="false" />
+    <span v-show="screenIsTooSmall" id="mobile-coming-soon"
+      >Mobile version under construction...</span
+    >
+    <span id="desktop-wrapper" v-show="!screenIsTooSmall">
+      <TeamSelector />
+      <MenuPane />
+      <main :style="mainStyles">
+        <router-view />
+        <LoadingOverlay ref="viewLoadingOverlay" :useTeamColors="true" />
+      </main>
+      <LoadingOverlay ref="mainLoadingOverlay" :useTeamColors="false" />
+    </span>
   </div>
 </template>
 
@@ -35,6 +40,8 @@ import { TeamLogo } from "./types/data-types/team-logo";
   }
 })
 export default class App extends Vue {
+  private screenIsTooSmall = false;
+
   private get mainStyles() {
     return {
       "background-color": TeamLogosModule.selectedBackdropColor
@@ -56,23 +63,29 @@ export default class App extends Vue {
 
   removeAppLoadingOverlay() {
     const overlay = this.$refs.mainLoadingOverlay as LoadingOverlay;
-    overlay.removeLoadingOverlay();
+    overlay?.removeLoadingOverlay();
   }
 
   public removeViewLoadingOverlay() {
     const overlay = this.$refs.viewLoadingOverlay as LoadingOverlay;
-    overlay.removeLoadingOverlay();
+    overlay?.removeLoadingOverlay();
   }
 
   public showViewLoadingOverlay() {
     const overlay = this.$refs.viewLoadingOverlay as LoadingOverlay;
-    overlay.addLoadingOverlay();
+    overlay?.addLoadingOverlay();
+  }
+
+  private handleWindowResize() {
+    this.screenIsTooSmall = window.innerWidth < 1200;
   }
 
   mounted() {
     this.loadInitialData();
     this.requireImages();
     setTimeout(this.removeAppLoadingOverlay, 1000);
+    this.handleWindowResize();
+    window.addEventListener("resize", this.handleWindowResize);
   }
 }
 </script>
@@ -98,6 +111,25 @@ body {
   display: flex;
   user-select: none;
   position: relative;
+
+  #mobile-coming-soon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-size: 3rem;
+  }
+
+  #desktop-wrapper {
+    text-align: center;
+    color: white;
+    background-color: #1c2532;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    user-select: none;
+    position: relative;
+  }
 
   main {
     flex: 1;
