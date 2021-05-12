@@ -13,7 +13,7 @@
     "@types/fuzzyset.js": "0.0.2",
     "apexcharts": "^3.18.1",
     "axios": "^0.19.2",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.6.4",
     "fuzzyset.js": "0.0.91",
